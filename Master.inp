@@ -43,4 +43,4 @@
 20.0e-6	! a_0 term (F/cm^2)
 3.0e-6	! a_1 term (F/cm^2)
 2.0e-6	! a_2 term (F/cm^2)
-0, -1, 1, 1.0e0, 1.0e0, 0.000, 0.5, 0.50e0 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+0, -1, 1, 1.0e0, 1.0e0, 10e-2, 0e-2, 0.50 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)

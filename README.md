@@ -2,6 +2,8 @@
 
 Suite of python codes to preform analysis of MECSim results and automated scripting of MECSim runs (./MECSim_win7.exe)
 
+Note that you should always run a single MECSim on a roughly correct value set to ensure that the curve looks correct. For example too low resolution may lead to spurious spikes in the current. There are warnings in the MECSim output that guide the user to finding these or that abort when criteria for numerical stability are not met. Best to go through this before automation - machines can not do everything... yet.
+
 
 ## Analysis codes
 
