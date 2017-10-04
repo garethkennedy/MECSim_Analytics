@@ -1,12 +1,12 @@
 #!/bin/bash
-xmin=0
-xmax=2
-xdel=1
-xext=e-2
-ymin=-10
-ymax=10
-ydel=5
-yext=e-2
+xmin=2
+xmax=6
+xdel=2
+xext=e-1
+ymin=-1
+ymax=1
+ydel=1
+yext=e-1
 x=$xmin
 python HarmonicSplitter.py -script -exp
 > results.txt

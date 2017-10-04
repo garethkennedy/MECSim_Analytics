@@ -4,10 +4,12 @@
 # # Harmonic splitter
 # 
 # Go through either experimental or simulation data to isolate the frequencies.
+# 
+# Note that the first will always be a DC using a window of f_min - delta
 
 # ## Script parameters
 
-# In[81]:
+# In[17]:
 
 # output to screen (useful if interactive)
 iOutputToScreen = True
@@ -20,7 +22,7 @@ iScriptMode = False
 
 # ### Load packages
 
-# In[82]:
+# In[18]:
 
 # import required python packages
 import numpy as np
@@ -34,7 +36,7 @@ import sys
 # 
 # Filenames set by input argument either simulation or experiment
 
-# In[83]:
+# In[19]:
 
 lines = [line.rstrip('\n') for line in open('Settings.inp')]
 raw_data_exp = lines[0].strip().split()[0]
@@ -50,7 +52,7 @@ results_name = lines[6].strip().split()[0]
 # 
 # Take arguments from command line. Argument specifies which filename to select.
 
-# In[99]:
+# In[20]:
 
 filename_out = filename_sim
 data_input = raw_data_sim
@@ -67,11 +69,20 @@ if(len(sys.argv)>1):
                 data_input = raw_data_exp
 
 
+# ## Output summary
+# 
+
+# In[21]:
+
+print "Harmonics: ", filename_out, data_input
+print "with args: ", sys.argv
+
+
 # ## Define functions
 # 
 # Read the data file using the format from POT software also used as default by MECSim. Time, current then applied potential
 
-# In[85]:
+# In[22]:
 
 # load POT output file
 def ReadPOTFileFreq(filename):
@@ -108,7 +119,7 @@ def ReadPOTFileFreq(filename):
 
 # Smooth the current as an envelope of the current as a function of time
 
-# In[86]:
+# In[23]:
 
 def SmoothCurrent(t, i, e, tWindow):
     iSmooth = list(i)
@@ -136,7 +147,7 @@ def SmoothCurrent(t, i, e, tWindow):
 # 
 # Read in data from the POT file
 
-# In[87]:
+# In[24]:
 
 iCount, nfreq, freq, amp, time, current, eapp = ReadPOTFileFreq(data_input)
 t = np.array(time)
@@ -146,7 +157,7 @@ ea = np.array(eapp)
 
 # Length of data
 
-# In[88]:
+# In[25]:
 
 n_data_length = len(t)
 
@@ -154,7 +165,7 @@ n_data_length = len(t)
 # Isolate ac fundamental frequencies
 # ---
 
-# In[89]:
+# In[26]:
 
 freqMin = min(freq[0:nfreq])
 tWindow = 1.0/freqMin
@@ -166,21 +177,26 @@ if(iOutputToScreen):
 # ---
 # 
 # Single frequency is assumed for now. Do all harmonics of it (and dc).
+# 
+# DC isolation goes up to the lowest frequency with some buffer
 
-# In[90]:
+# In[27]:
 
 i_Harm = []
 c_Harm = []
 
+# isolate dc ramp component
 W = fftfreq(c.size, d=2*(t[1]-t[0]))
 f_signal = rfft(c)
 cut_f_signal = f_signal.copy()
-cut_f_signal[(W>0.5*freq[0])] = 0
+#cut_f_signal[(W>0.5*freqMin)] = 0
+cut_f_signal[(W>freqMin-frequency_bandwidth)] = 0
 cut_signal = irfft(cut_f_signal)
 
 c_Harm.append(cut_signal)
 i_Harm.append(SmoothCurrent(t, cut_signal, eapp, tWindow))
 
+# now for the harmonics
 for iH in range(number_harmonics):
     iHarm = iH + 1
     fH = float(iHarm)
@@ -196,7 +212,7 @@ for iH in range(number_harmonics):
 
 # Save relevant data
 
-# In[91]:
+# In[28]:
 
 data_output = t
 for i in range(number_harmonics+1):
@@ -211,7 +227,7 @@ np.savetxt(filename_out, data_output)
 # 
 # ONLY if not using this in bash script
 
-# In[92]:
+# In[29]:
 
 if(plotInteractive):
     import matplotlib.pyplot as plt
@@ -222,7 +238,7 @@ if(plotInteractive):
     plt.show()
 
 
-# In[93]:
+# In[30]:
 
 if(plotInteractive):
     plt.subplot(221)
@@ -238,7 +254,7 @@ if(plotInteractive):
     plt.show()
 
 
-# In[94]:
+# In[31]:
 
 if(plotInteractive):
     iH = 1

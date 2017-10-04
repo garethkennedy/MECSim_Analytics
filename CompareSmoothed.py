@@ -15,7 +15,7 @@
 
 # ## Script parameters
 
-# In[125]:
+# In[23]:
 
 # output to screen (useful if interactive)
 iOutputToScreen = True
@@ -28,7 +28,7 @@ iScriptMode = False
 
 # ### Load packages
 
-# In[126]:
+# In[24]:
 
 import numpy as np
 import sys
@@ -38,15 +38,15 @@ import sys
 # 
 # Take arguments from command line
 
-# In[137]:
+# In[25]:
 
-if(len(sys.argv)>0):
+if(len(sys.argv)>1):
     if(sys.argv[1]=='-script'):
         iScriptMode = True
         iOutputToScreen = False
         plotInteractive = False
         input_parameters = []
-        if(len(sys.argv)>1):
+        if(len(sys.argv)>2):
             input_parameters = sys.argv[2:]
 
 
@@ -57,7 +57,7 @@ if(len(sys.argv)>0):
 # 
 # weights file (made by generate script?)
 
-# In[128]:
+# In[26]:
 
 lines = [line.rstrip('\n') for line in open('Settings.inp')]
 raw_data_exp = lines[0].strip().split()[0]
@@ -69,6 +69,15 @@ filename_sim = lines[5].strip().split()[0]
 results_name = lines[6].strip().split()[0]
 
 
+# ## Output summary to screen
+
+# In[27]:
+
+if(iOutputToScreen):
+    print "Experiment file: ", filename_exp
+    print "Simulation file: ", filename_sim
+
+
 # ## Define functions
 # 
 # Read smoothed time series data. Generalise to take any number of harmonics and weights.
@@ -77,10 +86,10 @@ results_name = lines[6].strip().split()[0]
 # 
 # Generally, i=0 is the dc componet, others are harmonics. But does not have to be.
 
-# In[129]:
+# In[37]:
 
 def ReadSmoothed(filename):
-    lines = [line.rstrip('\n') for line in open('Smoothed.txt')]
+    lines = [line.rstrip('\n') for line in open(filename)]
     n_rows = len(lines)
     n_cols = len(lines[0].strip().split())
     n_harm = n_cols - 1
@@ -100,7 +109,7 @@ def ReadSmoothed(filename):
 # 
 # This assumes that they perfectly align (they do on the test case and rest made by MECSim so should too)
 
-# In[130]:
+# In[29]:
 
 def LeastSquares(y1, y2): # first is the basis for comparision
     S = 0.0
@@ -115,7 +124,7 @@ def LeastSquares(y1, y2): # first is the basis for comparision
 # 
 # Set experimental and simulation files for comparison
 
-# In[131]:
+# In[38]:
 
 # experiment file for basis
 n_rows_exp, n_harm_exp, t_exp, i_Harm_exp = ReadSmoothed(filename_exp)
@@ -124,9 +133,16 @@ n_rows_exp, n_harm_exp, t_exp, i_Harm_exp = ReadSmoothed(filename_exp)
 n_rows_sim, n_harm_sim, t_sim, i_Harm_sim = ReadSmoothed(filename_sim)
 
 
+# In[40]:
+
+diff = i_Harm_sim[1, :] - i_Harm_exp[1, :]
+#print max(diff)
+#print filename_exp, filename_sim
+
+
 # These should match up
 
-# In[132]:
+# In[32]:
 
 if(iOutputToScreen):
     if(n_harm_exp!=n_harm_sim):
@@ -140,7 +156,7 @@ n_harm = n_harm_exp
 # 
 # Calculate least squares for each harmonic
 
-# In[133]:
+# In[33]:
 
 S = np.zeros(n_harm)
 for i in range(n_harm):
@@ -150,7 +166,7 @@ for i in range(n_harm):
 
 # Combine with weights (if specified) to give final, single valued metric
 
-# In[134]:
+# In[34]:
 
 Smetric = 0.0
 for i in range(n_harm):
@@ -164,7 +180,7 @@ if(iOutputToScreen):
 # 
 # Append to the results file if in script mode. Note that the results file must already exist. The script will automatically make an empty file when it begins.
 
-# In[135]:
+# In[35]:
 
 if(iScriptMode):
     import csv
@@ -179,7 +195,7 @@ if(iScriptMode):
 # 
 # ONLY if not using this in bash script
 
-# In[136]:
+# In[36]:
 
 if(plotInteractive):
     import matplotlib.pyplot as plt
