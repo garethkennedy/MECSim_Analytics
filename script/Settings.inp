@@ -1,0 +1,7 @@
+ExperimentalOut.txt	# experiment raw data filename
+MECSimOutput_Pot.txt	# simulation output filename
+6	# number of harmonics
+1.0	# bandwidth frequency (Hz)
+ExpSmoothed.txt	# filename for smoothed experimental output
+Smoothed.txt	# filename for smoothed simulation output
+results.txt	# results file to append to
