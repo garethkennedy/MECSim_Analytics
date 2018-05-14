@@ -75,6 +75,7 @@ RUN tail output/log.txt
 RUN ls -lrt
 
 # prepare and test entry script
+RUN cp script/entry_script.sh .
 RUN chmod +x entry_script.sh
 RUN dos2unix entry_script.sh
 RUN ./entry_script.sh --help
