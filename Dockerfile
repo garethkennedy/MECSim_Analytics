@@ -45,25 +45,28 @@ RUN rm -rf git_codes.tar.gz
 #RUN mv MECSim_Analytics-master/* .
 #RUN rm -rf MECSim_Analytics-master
 
-RUN find *
-
 # setup directory structure (additional python directory for user mapping?)
 # scripting directory?
 # set working directory
 COPY src/*.f /usr/local/src/
-RUN find *
-RUN ls -lrt MECSim_Analytics-master/*
-RUN ls -lrt /usr/local/MECSim_Analytics-master/*
-COPY MECSim_Analytics-master/input/Master.inp /usr/local/input/
-RUN mkdir output
+
+WORKDIR /usr/local/MECSim_Analytics-master/
+# copy required directories
+COPY input/* /usr/local/input/
+COPY python/* /usr/local/python/
+COPY input_templates/* /usr/local/input_templates/
+COPY script/* /usr/local/script/
+# copy specific files
+COPY entry_script/entry_script.sh /usr/local/
+
+# back to base directory
+WORKDIR /usr/local/
 # some issues with opkda1 and opkda2 warnings
 RUN gfortran -O3 -o MECSim.exe src/MECSim.f src/AddReaction.f src/Solve_EChem.f src/Setup_Geo.f src/SetupPreEqm.f src/LinearSubs.f src/lubksb.f src/ludcmp.f src/svdcmp.f src/svbksb.f src/pythag.f src/INTtoCHR.f src/MHSubs.f src/ConcUpdate.f src/CalcCurrent.f src/ODEjacobn.f src/ODEFront.f src/opkdmain.f src/opkda1.f src/opkda2.f src/SortInsertion.f
+
 # remove source files
 RUN rm -rf src/
-
-
-RUN find *
-
+RUN mkdir output
 
 # test MECSim
 RUN echo "Will test MECSim now"
@@ -73,10 +76,8 @@ RUN ./MECSim.exe
 RUN head output/log.txt
 RUN tail output/log.txt
 
-RUN ls -lrt
-
 # prepare and test entry script
-COPY MECSim_Analytics-master/entry_script/entry_script.sh .
+#COPY MECSim_Analytics-master/entry_script/entry_script.sh .
 RUN chmod +x entry_script.sh
 RUN dos2unix entry_script.sh
 RUN ./entry_script.sh --help
