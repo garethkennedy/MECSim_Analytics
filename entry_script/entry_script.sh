@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # convert all ipynb to py
+jupyter nbconvert --to python --template=python.tpl python/*
 
 # Entry point script for MECSim docker. 
 

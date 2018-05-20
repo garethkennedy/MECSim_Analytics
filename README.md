@@ -37,7 +37,20 @@ The two analysis codes are called in non-interactive mode inside the generated s
 5. Run the "SurfacePlots" interactive script to examine or produce output images of the grid results
 
 
+## Docker instructions
+
+Once the docker is running the last lines will be similar to:
+
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+    http://localhost:8888/?token=xxx
+
+Follow the instructions.
+
+
 ## Known issues
+
+
 
 ### Docker for windows 10
 
