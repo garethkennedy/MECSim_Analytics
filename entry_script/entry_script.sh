@@ -7,6 +7,7 @@ jupyter nbconvert --to python --template=python.tpl python/*
 
 if [ "$1" == "--script" ]; then
   echo "Running scripting mode on script/run_mecsim_script.sh:"
+  ls -lrt script/*
   dos2unix script/*.sh
   chmod +x script/*.sh
   ./script/run_mecsim_script.sh
