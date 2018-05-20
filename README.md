@@ -37,6 +37,17 @@ The two analysis codes are called in non-interactive mode inside the generated s
 5. Run the "SurfacePlots" interactive script to examine or produce output images of the grid results
 
 
+## Known issues
+
+### Docker for windows 10
+
+
+	run_docker_win_cmd_jupyter.bat
+
+	docker run -v C:\Repos\MECSim_Analytics/input:/usr/local/input -v C:\Repos\MECSim_Analytics/output:/usr/local/output -v C:\Repos\MECSim_Analytics/python:/usr/local/python -v C:\Repos\MECSim_Analytics/script:/usr/local/script --rm --name mecsim_container -p 8888:8888 -it mecsim --jupyter
+
+	docker: Error response from daemon: driver failed programming external connectivity on endpoint mecsim_container (6bd515b1957924776f7bb96a77ae31ba4c1f61486ae8c7b1e404701dc2778e02): Error starting userland proxy: mkdir /port/tcp:0.0.0.0:8888:tcp:172.17.0.2:8888: input/output error.
+
 
 ## Disclaimer
 
