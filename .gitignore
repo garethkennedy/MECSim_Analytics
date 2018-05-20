@@ -1,0 +1,7 @@
+
+# Temporary files created by jupyter notebook
+*.ipynb_*
+
+# fortran source code
+src/
+
