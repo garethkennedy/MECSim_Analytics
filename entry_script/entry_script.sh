@@ -3,6 +3,10 @@
 # synchronize volumes between local directory and "external" part of the docker image
 # 1: copy externally mapped directory contents over local directories
 #    note that these changes are ephemeral and will only last while the docker container is being run
+echo $PWD
+
+ls -lrt external/*
+
 cp external/input/* input/
 cp external/python/* python/
 cp external/script/* script/

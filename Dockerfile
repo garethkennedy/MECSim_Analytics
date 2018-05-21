@@ -80,7 +80,8 @@ RUN tail output/log.txt
 #COPY MECSim_Analytics-master/entry_script/entry_script.sh .
 RUN chmod +x entry_script.sh
 RUN dos2unix entry_script.sh
-RUN ./entry_script.sh --help
+#RUN ./entry_script.sh --help
+#RUN rm -f python/*.py
 
 # create directories to map onto external directories (output is fine as is)
 #%cd%/input:/usr/local/input -v %cd%/output:/usr/local/output -v %cd%/python:/usr/local/python -v %cd%/script:/usr/local/script
