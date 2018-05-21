@@ -93,6 +93,9 @@ RUN mkdir script
 
 WORKDIR /usr/local/
 
+# cleanup
+RUN rm -rf bin/ lib/ share/ MECSim_Analytics-master/
+
 # expose notebook port
 EXPOSE 8888
 

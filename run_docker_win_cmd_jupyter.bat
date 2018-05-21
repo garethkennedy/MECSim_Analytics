@@ -1,1 +1,1 @@
-docker run -v %cd%/input:/usr/local/input -v %cd%/output:/usr/local/output -v %cd%/python:/usr/local/python -v %cd%/script:/usr/local/script --rm --name mecsim_container -p 8888:8888 -it mecsim --jupyter
+docker run -v %cd%/input:/usr/local/external/input -v %cd%/output:/usr/local/output -v %cd%/python:/usr/local/external/python -v %cd%/script:/usr/local/external/script --rm --name mecsim_container -p 8888:8888 -it mecsim --jupyter
