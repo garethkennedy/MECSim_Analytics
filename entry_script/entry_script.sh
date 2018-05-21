@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# synchronize volumes between local directory and "external" part of the docker image
+# 1: copy externally mapped directory contents over local directories
+#    note that these changes are ephemeral and will only last while the docker container is being run
+cp external/input/* input/
+cp external/python/* python/
+cp external/script/* script/
+# 2: copy back to the mapped directories. Thus they will have the most up to date versions AND any gaps filled in with default files stored in the docker image
+cp input/* external/input/
+cp python/* external/python/
+cp script/* external/script/
+
 # convert all ipynb to py
 jupyter nbconvert --to python --template=python.tpl python/*
 

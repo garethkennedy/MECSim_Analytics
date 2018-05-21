@@ -82,6 +82,16 @@ RUN chmod +x entry_script.sh
 RUN dos2unix entry_script.sh
 RUN ./entry_script.sh --help
 
+# create directories to map onto external directories (output is fine as is)
+#%cd%/input:/usr/local/input -v %cd%/output:/usr/local/output -v %cd%/python:/usr/local/python -v %cd%/script:/usr/local/script
+RUN mkdir external
+WORKDIR /usr/local/external/
+RUN mkdir input
+RUN mkdir python
+RUN mkdir script
+
+WORKDIR /usr/local/
+
 # expose notebook port
 EXPOSE 8888
 
