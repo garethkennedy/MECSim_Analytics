@@ -32,13 +32,13 @@
 # 
 # General parameters and filesnames which will be ignored depending on the options.
 
-# In[2]:
+# In[6]:
 
 # Set an artifical minimum for the metric value(s)
 epsilon = 1.0e-6
 
 # set marker label in results header to mark when input variables are finished
-header_market = 'S'
+header_marker = 'S'
 
 # default name for results input file which constains least squares fit metric(s)
 results_file_name_default = 'results.txt'
@@ -61,7 +61,7 @@ opt_para_filename = "opt_parameters.txt"
 # 
 # Plot a contour plot for the final probabilities against two parameters selected by their column number in the results file.
 
-# In[3]:
+# In[7]:
 
 # Plot output to png, pdf files)
 iPlotOutput = True
@@ -80,7 +80,7 @@ iy = 1
 
 # ## Load packages
 
-# In[4]:
+# In[8]:
 
 # load system functions for inputting arguments at command line
 import sys
@@ -102,7 +102,7 @@ if(iPlotOutput):
 # 1. this file is run from the command line, so the first argument is the name of this python file (py rather than ipynb).
 # 2. running in interactive mode - through a jupyter notebook say. In which case we use the default file name set above.
 
-# In[6]:
+# In[9]:
 
 thisCodeName = 'BayesianAnalysis.py'
 nLength = len(thisCodeName)
@@ -121,7 +121,7 @@ else:
 # 
 # Use header line to determine the number of input parameters compared to the number of result values
 
-# In[5]:
+# In[10]:
 
 lines = [line.rstrip('\n') for line in open(results_file_name)]
 
@@ -145,7 +145,7 @@ n_cols = np.shape(input_data)[1]
 
 # Sort by parameters first - in case of an issue with loading priors later
 
-# In[6]:
+# In[11]:
 
 input_data = input_data[input_data[:,(output_first_index-1)].argsort()]
 for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
@@ -154,7 +154,7 @@ for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
 
 # Collect into parameters and least squares metrics
 
-# In[7]:
+# In[12]:
 
 input_parameters = input_data[0:n_data, 0:(output_first_index)]
 input_metrics    = input_data[0:n_data, output_first_index:n_cols]
@@ -203,7 +203,7 @@ input_metrics    = input_data[0:n_data, output_first_index:n_cols]
 # 
 # Back to <a href="#top">top</a>.
 
-# In[8]:
+# In[13]:
 
 if(iLoadPriors):
     print('Loading priors from ', priors_filename)
@@ -226,8 +226,9 @@ else:
 # 
 # Back to <a href="#top">top</a>.
 
-# In[9]:
+# In[14]:
 
+## some issue with coding for P_Mi_Dk != 1!!!! when not using single metric
 n_metrics = np.shape(input_metrics)[1]
 P_Mi = priors
 # get P(D_k | M_i)
@@ -241,6 +242,12 @@ for k in range(n_metrics):
 P_Mi_Dk = np.array(P_Mi_Dk[0,:])
 
 
+# In[18]:
+
+# this should be the length of n_data (=2 for this sample!)
+priors
+
+
 # <a id="ref_posteriors"></a>
 # ## Save posteriors
 # 
@@ -248,7 +255,7 @@ P_Mi_Dk = np.array(P_Mi_Dk[0,:])
 # 
 # Back to <a href="#top">top</a>.
 
-# In[10]:
+# In[15]:
 
 parameters = input_parameters.reshape(n_data, output_first_index)
 values = P_Mi_Dk.reshape(n_data, n_metrics)
@@ -257,7 +264,7 @@ posterior = np.concatenate((parameters, values), axis=1)
 
 # Output to csv file
 
-# In[11]:
+# In[ ]:
 
 if(iSavePosterior):
     np.savetxt(posterior_filename, posterior, fmt='%.8e', delimiter=",")
@@ -276,7 +283,7 @@ if(iSavePosterior):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[12]:
+# In[ ]:
 
 interpolator = NearestNDInterpolator(x=parameters, y=values)
 
@@ -287,7 +294,7 @@ interpolator = NearestNDInterpolator(x=parameters, y=values)
 # 
 # 
 
-# In[13]:
+# In[ ]:
 
 n_res = 100
 opt_index = np.argmax(P_Mi_Dk)
@@ -327,7 +334,7 @@ print("opt+1sd = ", opt_para_p)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[14]:
+# In[ ]:
 
 if(iSaveParameters):
     # round values
@@ -350,7 +357,7 @@ if(iSaveParameters):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[15]:
+# In[ ]:
 
 if(iPlotOutput):
     # set names
@@ -381,7 +388,7 @@ if(iPlotOutput):
 # 
 # Overall resolution, aesthetic buffer around plot region and enter interactive mode (if requested)
 
-# In[16]:
+# In[ ]:
 
 if(iPlotOutput):
     # set overall data resolution
@@ -403,7 +410,7 @@ if(iPlotOutput):
 # 
 # The default aesthetic settings and axes labels can be changed here.
 
-# In[17]:
+# In[ ]:
 
 if(iPlotOutput):
     deltax = (xplotmax - xplotmin)/float(nx)
