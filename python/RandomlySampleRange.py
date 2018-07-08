@@ -51,7 +51,7 @@
 # 
 # 
 
-# In[2]:
+# In[1]:
 
 import numpy as np
 
@@ -71,31 +71,34 @@ import numpy as np
 # 
 # Rather than a sweep which requires a ``del_x`` the random sample requires the total number of simulations to run.
 
-# In[3]:
+# In[2]:
 
 # total number of simulations to run
-n_simulations = 100
+n_simulations = 10
+# store the log files from each simulation
+store_log_files = True
 
 
-# In[1]:
+# In[3]:
 
 # setup parameters
 x_para_name = []
 x_para_min = []
 x_para_max = []
-
-#### copy this for as many parameters as required ####
-x_para_name.append('$kzero')
-x_para_min.append(0.50e-2)
-x_para_max.append(1.50e-2)
-x_para_log.append(False)
-#### end of code chunk to copy
+x_para_log = []
 
 #### copy this for as many parameters as required ####
 x_para_name.append('$Ezero')
 x_para_min.append(-0.10)
 x_para_max.append(0.1)
 x_para_log.append(False)
+#### end of code chunk to copy
+
+#### copy this for as many parameters as required ####
+x_para_name.append('$kzero')
+x_para_min.append(1.0e-2)
+x_para_max.append(1.0e4)
+x_para_log.append(True)
 #### end of code chunk to copy
 
 #### copy this for as many parameters as required ####
@@ -114,7 +117,7 @@ x_para_log.append(False)
 # The raw experimental data file must have the same format as MECSim output which is based on the output from a potentiostat (SPECS)
 # 
 
-# In[54]:
+# In[4]:
 
 Experimental_filename = 'MECSim_Example.txt'
 
@@ -123,30 +126,30 @@ Experimental_filename = 'MECSim_Example.txt'
 # ### Set weights for comparison
 # 
 # 
-# Metric used in ``CompareSmoothed.py`` is to take the smoothed harmonics from ``HarmonicSplitter.py`` for both the experimental and simulated data (a function of parameters run by ``MECSim``), calculated the least squares difference for each harmonic and combine them via
+# Metric used in ``CompareSmoothed.py`` is to take the smoothed harmonics from ``HarmonicSplitter.py`` for both the experimental and simulated data (a function of parameters run by ``MECSim``), calculated the sum of squares difference for each harmonic and combine them via
 # $$
-# S = \sum_{j=0}^{n_{harm}} w_j LS_j
+# S_m = \sum_{j=0}^{n_{harm}} w_j S_j
 # $$
-# where $n_{harm}$ is the number of harmonics, $j=0$ is the dc component, $w_j$ is the weight given to each harmonic (set below) and $LS_j$ is the relative least squares difference given by
+# where $n_{harm}$ is the number of harmonics, $j=0$ is the dc component, $w_j$ is the weight given to each harmonic (set below) and $S_j$ is the relative sum of squares difference given by
 # $$
-# LS_j = \frac{ \sum_k^n \left( i^{exp}_k - i^{sim}_k \right)^2 }{ \sum_k^n \left( i^{exp}_k \right)^2 }
+# S_j = \frac{ \sum_k^n \left( i^{exp}_k - i^{sim}_k \right)^2 }{ \sum_k^n \left( i^{exp}_k \right)^2 }
 # $$
 # where $n$ is the total number of current ($i$), time and voltage points in the smoothed experiemental ($exp$) and simiulated ($sim$) data. The weights ($w_j$) for each harmonic (and dc component) are set as a vector of any sum, or left as the unweighted default of $w_j = 1$.
 # 
 # 
 # #### Set weights
 # 
-# Select whether you wish to use custom weights by ``output_single_metric = True``, otherwise all LS$_j$ will be output and separated by commas.
+# Select whether you wish to use custom weights by ``output_single_metric = True``, otherwise all $S_j$ will be output and separated by commas.
 # 
 # Alter the following cell for custom weights. Ensure that this is the same length as the number of harmonics (plus dc)
 # 
 # Back to <a href="#top">top</a>.
 # 
 
-# In[55]:
+# In[5]:
 
 # use customer weights?
-output_single_metric = True
+output_single_metric = False
 
 # number of harmonics (excluding the dc component - harmonic = 0)
 number_harmonics = 6
@@ -166,7 +169,7 @@ weights = np.array([0.5,1,1,0.5,0.3,0.1,0.05])
 # **Note: these generally don't need to be changed**
 # 
 
-# In[56]:
+# In[6]:
 
 # python dir contains all .py files
 python_dir = 'python/'
@@ -187,15 +190,15 @@ parent_dir = '../'
 # 
 # Two options:
 # 
-# 1. use raw least square values in the results file to be plotted in a surface plot.
+# 1. use raw sum of square values in the results file to be plotted in a surface plot.
 # 2. use Bayesian analysis on the results file automatically done (figures and statistics are sent to output directory)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[57]:
+# In[17]:
 
 # select whether surface plotter to be used
-plot_surfaces = True
+plot_surfaces = False
 # select whether Bayesian statistical analysis to be used
 bayesian_analysis = True
 
@@ -206,7 +209,7 @@ bayesian_analysis = True
 # 
 # Can also change the default script name from 'run_mecsim_script.sh', although this is not recommended.
 
-# In[58]:
+# In[8]:
 
 # results filename and if it already exists
 results_name = 'results.txt'
@@ -219,7 +222,7 @@ script_name = 'run_mecsim_script.sh'
 # 
 # Change the default name of the simulation output file (not recommended)
 
-# In[59]:
+# In[9]:
 
 Simulation_output_filename = 'MECSimOutput_Pot.txt'
 
@@ -229,15 +232,15 @@ Simulation_output_filename = 'MECSimOutput_Pot.txt'
 # Set whether the experimental data file set above needs to have a Fast Fourier Transform (FFT) applied to it, and if so what filename to use.
 # 
 
-# In[60]:
+# In[10]:
 
 Experimental_FFT_output_filename = 'ExpSmoothed.txt'
-needs_fft_conversion = True
+needs_fft_conversion = False
 
 
 # Check that the number of weights for the number of harmonics is correct
 
-# In[61]:
+# In[11]:
 
 if(number_harmonics+1 != len(weights)):
     print "WARNING: Found", len(weights), "weights when there are", number_harmonics+1, "harmonics (including dc)"
@@ -251,7 +254,7 @@ if(number_harmonics+1 != len(weights)):
 
 # Convert np array to csv string (in case not python reading it in!)
 
-# In[62]:
+# In[12]:
 
 txt_weights = ','.join(map(str, weights))
 print "Weights:", txt_weights
@@ -259,7 +262,7 @@ print "Weights:", txt_weights
 
 # ### Script method
 
-# In[63]:
+# In[13]:
 
 method_type = 'random'
 
@@ -271,7 +274,7 @@ method_type = 'random'
 # 
 # Back to <a href="#top">top</a>.
 
-# In[64]:
+# In[14]:
 
 f = open(parent_dir+script_dir+'Settings.inp', 'w')
 f.write(Simulation_output_filename + "\t# simulation output filename\n")
@@ -312,26 +315,27 @@ f.close()
 # 2. Take the randomly generated input parameters and pass them to MECSim
 # 3. Use HarmonicSplitter.py to split and smooth the harmonics
 # 4. Use CompareSmoothed.py to compare the smoothed harmonics between the simulated current response and the experimental data.
-# 5. Comparison is calculated as a metric (default uses least squares) which is either a composite of all harmonic data or a list of values, one for each harmonic
+# 5. Comparison is calculated as a metric (default uses sum of squares) which is either a composite of all harmonic data or a list of values, one for each harmonic
 # 6. Append the x1, x2, ... and metric (S) values to a single file (results_name set above)
 # 
 # After the loop:
-# 1. All input parameters (x1, x2..) as well as the least squared metric (S, either 1 or more values) is now stored in "results_name" (typically Results.txt)
+# 1. All input parameters (x1, x2..) as well as the sum of squared metric (S, either 1 or more values) is now stored in "results_name" (typically Results.txt)
 # 2. BayesianAnalysis.py is run on this results file to determine the probabilities of each set of parameters given that the true fit to the experimental data exists somewhere in the chosen parameter range.
 # 3. BayesianAnalysis will output the posterior probabilities ("posterior.txt") as well as the optimal values with error bars ("opt_parameters.txt") and plots (png and pdf) depending on the settings in BayesianAnalysis.py.
-# 4. Additional plots of the least squares surfaces themselves are output by SurfacePlotter.py if requested.
+# 4. Additional plots of the sum of squares surfaces themselves are output by SurfacePlotter.py if requested.
 # 
 # **This script should be renamed to "run_mecsim_script.sh" and copied to "script/" along with "Settings.inp" created above.**
 # 
 # Back to <a href="#top">top</a>.
 
-# In[67]:
+# In[18]:
 
 if(method_type=='random'):
     print 'Using random sampling method to write to: ' + parent_dir+script_dir+script_name
-    with open(parent_dir+script_dir+script_name, "w") as text_file:
+#    with open(parent_dir+script_dir+script_name, "w") as text_file:
+    with open(script_name, "w") as text_file:
         text_file.write("#!/bin/bash\n")
-        text_file.write("cp {0}Settings.inp ./\n".format(script_dir))
+#        text_file.write("cp {0}Settings.inp ./\n".format(script_dir))
         # process harmonics for experimental data - if requested
         if(needs_fft_conversion):
             text_file.write("cp {0}{1} {2}\n".format(script_dir, Experimental_filename, Simulation_output_filename))
@@ -339,27 +343,36 @@ if(method_type=='random'):
             text_file.write("mv Smoothed.txt {0} \n".format(Experimental_FFT_output_filename))
         # setup parameter ranges
         text_file.write("i=1\n")
-        text_file.write("imax={0}\n".format())
+        text_file.write("imax={0}\n".format(n_simulations))
         # write header for results output file - else will append
         if(not results_exists):
-            text_file.write("echo '{0},{1},S' > {2}\n".format(x_name, y_name, results_name))
+            paraNames = ','.join(x_para_name)
+            text_file.write("echo '{0},S' > {1}\n".format(paraNames, results_name))
         # construct loop over parameters
-        text_file.write("while [ $x -le $xmax ]\n")
+        text_file.write("while [ $i -le $imax ]\n")
         text_file.write("do\n")
-        text_file.write("  y=$ymin\n")
-        text_file.write("  while [ $y -le $ymax ]\n")
-        text_file.write("  do\n")
-        text_file.write("    cp {0}Master.sk ./Master.inp\n".format(script_dir))
-        text_file.write("    sed -i 's/{0}/'$x$xext'/g' ./Master.inp\n".format(x_name))
-        text_file.write("    sed -i 's/{0}/'$y$yext'/g' ./Master.inp\n".format(y_name))
+        text_file.write("  i=$((i+1))\n")
+        text_file.write("  cp {0}Master.sk ./Master.inp\n".format(script_dir))
+        for i in range(len(x_para_name)):
+            if(x_para_log[i]):
+                x_para_text = 'x=$(python ' + python_dir + 'ReturnRandomExpFormat.py ' + str(x_para_min[i]) + ' ' + str(x_para_max[i]) + ' True)'
+            else:
+                x_para_text = 'x=$(python ' + python_dir + 'ReturnRandomExpFormat.py ' + str(x_para_min[i]) + ' ' + str(x_para_max[i]) + ' False)'
+            text_file.write("    {0}\n".format(x_para_text))
+            text_file.write("    sed -i 's/{0}/'$x'/g' ./Master.inp\n".format(x_para_name[i]))
+            text_file.write("    echo '{0}' $x\n".format(x_para_name[i]))
+            # store parameter text
+            if(i==0):
+                text_file.write("    paraString=$x\n")
+            else:
+                text_file.write("    paraString=$paraString,$x\n")
+    
         text_file.write("    ./MECSim.exe 2>errors.txt\n")
-        text_file.write("    mv log.txt {0}log_$x$xext_$y$yext.txt\n".format(output_dir))
+        if(store_log_files):
+            text_file.write("    mv log.txt {0}log_$i.txt\n".format(output_dir))
         text_file.write("    python {0}HarmonicSplitter.py\n".format(python_dir))
         text_file.write("    z=$(python {0}CompareSmoothed.py)\n".format(python_dir))
-        text_file.write("    echo $x$xext,$y$yext,$z >> {0}\n".format(results_name))
-        text_file.write("    y=$((y+ydel))\n")
-        text_file.write("  done\n")
-        text_file.write("  x=$((x+xdel))\n")
+        text_file.write("    echo $paraString,$z >> {0}\n".format(results_name))
         text_file.write("done\n")
         # copy out raw results file
         text_file.write("cp {0} {1}\n".format(results_name, output_dir))
@@ -369,22 +382,13 @@ if(method_type=='random'):
             # for all output file names check BayesianAnalysis.py for consistency
             text_file.write("cp bayesian_plot.* {0}\n".format(output_dir)) # plots
             text_file.write("cp posterior.txt opt_parameters.txt {0}\n".format(output_dir)) 
-        # run least squares plotter (also uses results file name as argument)
+        # run sum of squares plotter (also uses results file name as argument)
         if(plot_surfaces):
             text_file.write("python {0}SurfacePlotter.py {1}\n".format(python_dir, results_name))
             text_file.write("cp surface_plot.* {0}\n".format(output_dir))
 
 
-# ### Total number of models to run
+# In[16]:
 
-# In[68]:
-
-# some rounding issues can pop up here...
-def CalcModelsToRun(x_min, x_max, del_x):
-    n = int(x_max/del_x) - int(x_min/del_x) + 1
-    return(n)
-
-# output total number of models that will be run (2D)
-n_models = CalcModelsToRun(x_min, x_max, del_x) * CalcModelsToRun(y_min, y_max, del_y)
-print('Total number of simulations to run = ' + str(n_models))
+print("Total number of simulations to be run: " + str(n_simulations))
 

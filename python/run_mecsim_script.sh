@@ -25,3 +25,6 @@ do
     echo $paraString,$z >> results.txt
 done
 cp results.txt output/
+python python/BayesianAnalysis.py results.txt
+cp bayesian_plot.* output/
+cp posterior.txt opt_parameters.txt output/

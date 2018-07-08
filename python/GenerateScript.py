@@ -51,7 +51,7 @@
 # 
 # 
 
-# In[1]:
+# In[35]:
 
 import numpy as np
 
@@ -68,7 +68,7 @@ import numpy as np
 # For the user, ensure that the x and y names are correct both here and in "Master.sk", as well as the ranges.
 # 
 
-# In[2]:
+# In[36]:
 
 x_name = '$kzero'
 x_min = 0.50e-2
@@ -88,7 +88,7 @@ del_y = 5.0e-2
 # The raw experimental data file must have the same format as MECSim output which is based on the output from a potentiostat (SPECS)
 # 
 
-# In[3]:
+# In[37]:
 
 Experimental_filename = 'MECSim_Example.txt'
 
@@ -117,7 +117,7 @@ Experimental_filename = 'MECSim_Example.txt'
 # Back to <a href="#top">top</a>.
 # 
 
-# In[4]:
+# In[38]:
 
 # use customer weights?
 output_single_metric = True
@@ -140,7 +140,7 @@ weights = np.array([0.5,1,1,0.5,0.3,0.1,0.05])
 # **Note: these generally don't need to be changed**
 # 
 
-# In[5]:
+# In[39]:
 
 # python dir contains all .py files
 python_dir = 'python/'
@@ -166,7 +166,7 @@ parent_dir = '../'
 # 
 # Back to <a href="#top">top</a>.
 
-# In[6]:
+# In[40]:
 
 # select whether surface plotter to be used
 plot_surfaces = True
@@ -180,7 +180,7 @@ bayesian_analysis = True
 # 
 # Can also change the default script name from 'run_mecsim_script.sh', although this is not recommended.
 
-# In[7]:
+# In[41]:
 
 # results filename and if it already exists
 results_name = 'results.txt'
@@ -193,7 +193,7 @@ script_name = 'run_mecsim_script.sh'
 # 
 # Change the default name of the simulation output file (not recommended)
 
-# In[8]:
+# In[42]:
 
 Simulation_output_filename = 'MECSimOutput_Pot.txt'
 
@@ -203,7 +203,7 @@ Simulation_output_filename = 'MECSimOutput_Pot.txt'
 # Set whether the experimental data file set above needs to have a Fast Fourier Transform (FFT) applied to it, and if so what filename to use.
 # 
 
-# In[9]:
+# In[43]:
 
 Experimental_FFT_output_filename = 'ExpSmoothed.txt'
 needs_fft_conversion = True
@@ -211,7 +211,7 @@ needs_fft_conversion = True
 
 # Check that the number of weights for the number of harmonics is correct
 
-# In[10]:
+# In[44]:
 
 if(number_harmonics+1 != len(weights)):
     print "WARNING: Found", len(weights), "weights when there are", number_harmonics+1, "harmonics (including dc)"
@@ -225,7 +225,7 @@ if(number_harmonics+1 != len(weights)):
 
 # Convert np array to csv string (in case not python reading it in!)
 
-# In[11]:
+# In[45]:
 
 txt_weights = ','.join(map(str, weights))
 print "Weights:", txt_weights
@@ -233,7 +233,7 @@ print "Weights:", txt_weights
 
 # ### Script method
 
-# In[12]:
+# In[46]:
 
 method_type = 'grid'
 
@@ -245,7 +245,7 @@ method_type = 'grid'
 # 
 # Back to <a href="#top">top</a>.
 
-# In[13]:
+# In[47]:
 
 f = open(parent_dir+script_dir+'Settings.inp', 'w')
 f.write(Simulation_output_filename + "\t# simulation output filename\n")
@@ -277,7 +277,7 @@ f.close()
 # ### Define function for dealing with exponential form
 # 
 
-# In[14]:
+# In[48]:
 
 def ConvertXToXExpForm(x_min, x_max, del_x):
     """
@@ -305,7 +305,7 @@ def ConvertXToXExpForm(x_min, x_max, del_x):
 # 
 # If more dimensions then add more here. Will also need to add to the parameters above and the script logic below.
 
-# In[15]:
+# In[49]:
 
 x_min_exp, x_max_exp, del_x_exp, x_exp = ConvertXToXExpForm(x_min, x_max, del_x)
 y_min_exp, y_max_exp, del_y_exp, y_exp = ConvertXToXExpForm(y_min, y_max, del_y)
@@ -334,7 +334,7 @@ y_min_exp, y_max_exp, del_y_exp, y_exp = ConvertXToXExpForm(y_min, y_max, del_y)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[16]:
+# In[50]:
 
 if(method_type=='grid'):
     print 'Using grid method to write to: ' + parent_dir+script_dir+script_name
@@ -393,7 +393,7 @@ if(method_type=='grid'):
 
 # ### Total number of models to run
 
-# In[17]:
+# In[51]:
 
 # some rounding issues can pop up here...
 def CalcModelsToRun(x_min, x_max, del_x):
