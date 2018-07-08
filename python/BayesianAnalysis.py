@@ -6,7 +6,7 @@
 # 
 # Use the sweep results conducted with MECSim to get the best fit parameters as well as statistically rigorous error bars for each parameter. 
 # 
-# Bayesian probability updater is used to convert the least squares values output from MECSim analysis tools and stored in the results file into the probability that a particular set of parameters is the correct model for matching the experimental data given that the correct set is within the investigated range.
+# Bayesian probability updater is used to convert the sum of squares values output from MECSim analysis tools and stored in the results file into the probability that a particular set of parameters is the correct model for matching the experimental data given that the correct set is within the investigated range.
 # 
 # This method will work for any number of parameters and can use prior probability data to improve the quality of the parameter fits.
 # 
@@ -16,7 +16,7 @@
 # The contents of this notebook are:
 # - <p><a href="#ref_paras">Parameters</a></p>
 # - <p><a href="#ref_plot_paras">Plotting parameters (optional)</a></p>
-# - <p><a href="#ref_readResults">Read least squares results </a></p>
+# - <p><a href="#ref_readResults">Read sum of squares results </a></p>
 # - <p><a href="#ref_bayes_theory">Bayesian analysis theory</a></p>
 # - <p><a href="#ref_priors">Set priors</a></p>
 # - <p><a href="#ref_update">Bayesian update</a></p>
@@ -34,13 +34,13 @@
 
 # In[6]:
 
-# Set an artifical minimum for the metric value(s)
+# Set an artifical minimum for the metric value(s) - to avoid Prob=1/0 if sum of squares = 0
 epsilon = 1.0e-6
 
 # set marker label in results header to mark when input variables are finished
 header_marker = 'S'
 
-# default name for results input file which constains least squares fit metric(s)
+# default name for results input file which constains som of squares comparison metric(s)
 results_file_name_default = 'results.txt'
 
 # set how priors done
@@ -130,7 +130,7 @@ header_line = lines[0].replace('$', '')
 header_line = header_line.split(',')
 
 # find index for the results metric column header
-output_first_index = header_line.index(header_market)
+output_first_index = header_line.index(header_marker)
 
 # total length of data file (less header)
 n_data = len(lines)-1
@@ -152,7 +152,7 @@ for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
     input_data = input_data[input_data[:,0].argsort(kind='mergesort')]
 
 
-# Collect into parameters and least squares metrics
+# Collect input parameters and sum of squares metrics
 
 # In[12]:
 
@@ -163,7 +163,7 @@ input_metrics    = input_data[0:n_data, output_first_index:n_cols]
 # <a id="ref_bayes_theory"></a>
 # ## Bayesian analysis
 # 
-# Conceptually each set of parameters $x_i$ is treated as a different model $M_i$ that can potentially fit the experimental data from a given experiment $D_k$. This experimental data can either be the least squares fit for a single harmonic (or dc) or the resulting metric when all harmonic fit data is combined via respective weights.
+# Conceptually each set of parameters $x_i$ is treated as a different model $M_i$ that can potentially fit the experimental data from a given experiment $D_k$. This experimental data can either be the sum of squares difference for a single harmonic (or dc) or the resulting metric when all harmonic fit data is combined via respective weights.
 # 
 # We seek to find the probability of each model ($M_i$) given the input of new experimental data ($D_k$), which we write as $P(M_i|D_k)$.
 # 
@@ -172,12 +172,12 @@ input_metrics    = input_data[0:n_data, output_first_index:n_cols]
 # $$
 # P(M_i|D_k) = \frac{ P(D_k | M_i) P(M_i) } { \sum_j P(D_k | M_j) P(M_j) }
 # $$
-# where the probability of the data given the model is related to the least squares metric comparing the experimental current response data ($D_k$) to the simulated current ($S_{ki}$) for the parameters ($x_i$) via
+# where the probability of the data given the model is related to the sum of squares metric comparing the experimental current response data ($D_k$) to the simulated current ($S_{ki}$) for the parameters ($x_i$) via
 # $$
 # P(D_k | M_i) \propto \frac{1}{S_{ki}}.
 # $$
 # 
-# Since the least squares metric can return zero for a perfect fit then we need to add a small term to ensure the probability does not go to infinity. Also we can remove the proportionality constant since any choice we make for it cancels out when we apply the form for Bayes theorem above. Thus
+# Since the sum of squares metric can return zero for a perfect fit then we need to add a small term to ensure the probability does not go to infinity. Also we can remove the proportionality constant since any choice we make for it cancels out when we apply the form for Bayes theorem above. Thus
 # $$
 # P(D_k | M_i) = \frac{1}{S_{ki} + \epsilon}.
 # $$
@@ -242,10 +242,10 @@ for k in range(n_metrics):
 P_Mi_Dk = np.array(P_Mi_Dk[0,:])
 
 
-# In[18]:
+# In[1]:
 
 # this should be the length of n_data (=2 for this sample!)
-priors
+#priors
 
 
 # <a id="ref_posteriors"></a>
