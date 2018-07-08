@@ -3,7 +3,7 @@
 
 # # Compare smoothed waveforms
 # 
-# This script compares two smoothed data files and outputs the least squares comparison, either as a single metric or separately for each harmonic.
+# This script compares two smoothed data files and outputs the sum of squares comparison, either as a single metric or separately for each harmonic.
 # 
 # Requires: 
 # 1. Experimental and simulation data have already been processed into time series of smoothed harmonics.
@@ -21,7 +21,7 @@
 
 # ### Load packages
 
-# In[4]:
+# In[2]:
 
 # import required python packages
 import numpy as np
@@ -32,8 +32,9 @@ import sys
 # ## Read settings
 # 
 # Read parameters from the text file ``Settings.inp`` created by ``GenerateScript.ipynb``
+# 
 
-# In[5]:
+# In[3]:
 
 lines = [line.rstrip('\n') for line in open('Settings.inp')]
 filename = lines[0].strip().split()[0]
@@ -48,7 +49,7 @@ weights = np.fromstring(lines[5].strip(), dtype=float, sep=',')
 # 
 # Be default the filenames specifying the smoothed experimental and simulated data used for this comparison are hard wired. Changing these also requires them to be changed in ``HarmonicSplitter.py`` for consistency.
 
-# In[6]:
+# In[5]:
 
 # input the total number of frequencies to check; i.e. all frequencies, harmonics, cross harmonics etc
 # specified in harmonic splitter when this was created
@@ -66,7 +67,7 @@ plotInteractive = False
 
 # Double check that interactive plotting mode is disabled if running this in script mode
 
-# In[ ]:
+# In[6]:
 
 thisCodeName = 'CompareSmoothed.py'
 nLength = len(thisCodeName)
@@ -97,28 +98,28 @@ def ReadSmoothed(filename):
 
 
 # <a id="ref_weights"></a>
-# ### Least squares comparison function
+# ### Sum of squares comparison function
 # 
-# Metric used in ``CompareSmoothed.py`` is to take the smoothed harmonics from ``HarmonicSplitter.py`` for both the experimental and simulated data (a function of parameters run by ``MECSim``), calculated the least squares difference for each harmonic and combine them via
+# Metric used in ``CompareSmoothed.py`` is to take the smoothed harmonics from ``HarmonicSplitter.py`` for both the experimental and simulated data (a function of parameters run by ``MECSim``), calculated the sum of squares difference for each harmonic and combine them to a single metric $S_m$ via
 # $$
-# S = \sum_{j=0}^{n_{harm}} w_j LS_j
+# S_m = \sum_{j=0}^{n_{harm}} w_j S_j
 # $$
-# where $n_{harm}$ is the number of harmonics, $j=0$ is the dc component, $w_j$ is the weight given to harmonic $j$ specified in the ``Settings.inp`` file and $LS_j$ is the relative least squares difference given by
+# where $n_{harm}$ is the number of harmonics, $j=0$ is the dc component, $w_j$ is the weight given to harmonic $j$ specified in the ``Settings.inp`` file and $S_j$ is the relative sum of squares difference given by
 # $$
-# LS_j = \frac{ \sum_k^n \left( i^{exp}_k - i^{sim}_k \right)^2 }{ \sum_k^n \left( i^{exp}_k \right)^2 }
+# S_j = \frac{ \sum_k^n \left( i^{exp}_k - i^{sim}_k \right)^2 }{ \sum_k^n \left( i^{exp}_k \right)^2 }
 # $$
 # where $n$ is the total number of current ($i$), time and voltage points in the smoothed experiemental ($exp$) and simiulated ($sim$) data. The weights ($w_j$) for each harmonic (and dc component) are set as a vector of any sum, or left as the unweighted default of $w_j = 1$.
 # 
-# These relative least squares values are combined using the weights to calculate the final metric denoted as $S$ below. Note that the raw least squares values can also be output if ``i_use_weights=0``.
+# These relative sums of squares are combined using the weights to calculate the final metric denoted as $S$ below. Note that the raw sum of squares values are output as a comma separated string if ``i_use_weights=0``.
 # 
 # Notes:
-# 1. The least squares function is scaled by the sum of squares of the first input data 
+# 1. The sum of squares function is scaled by the sum of squares of the first input data 
 # 2. Input data must perfectly align in that they should have the same number of data rows in each file
 # 
 
 # In[8]:
 
-def LeastSquares(y1, y2): # first is the basis for comparision
+def ScaledSumOfSquares(y1, y2): # first is the basis for comparision
     S = 0.0
     X = 0.0
     for i in range(len(y1)):
@@ -144,7 +145,7 @@ smoothed_sim = ReadSmoothed(filename_sim)
 # 
 # Check file structure of both files for the correct number of harmonics as set in ``Settings.inp``
 
-# In[10]:
+# In[ ]:
 
 n_found_harm_exp = len(smoothed_exp[0, :]) - 2
 n_found_harm_sim = len(smoothed_sim[0, :]) - 2
@@ -159,23 +160,24 @@ if(number_harmonics!=n_found_harm_sim) or (number_harmonics!=n_found_harm_exp):
 # 
 # Calculate the combined metric $S$ accounting for all harmonics with dc first (so +1 for range). We start at column 1 rather than 0 as we do not need to compare the time column (index=0).
 
-# In[16]:
+# In[ ]:
 
 Smetric = 0.0
 S = []
 for i in range(number_harmonics+1):
-    Sharm = LeastSquares(smoothed_sim[:, i+1], smoothed_exp[:, i+1])*weights[i]
-    Smetric+=Sharm
+    # raw sum of squares comparison
+    Sharm = ScaledSumOfSquares(smoothed_sim[:, i+1], smoothed_exp[:, i+1])
     S.append(Sharm)
+    Smetric+=Sharm*weights[i]
 
 
 # ## Write to single metric to output
 # 
-# Depending on the selection in ``Settings.inp`` this file either outputs (to screen via print) a single number (the $S$ metric) or the full list of least squares values for each harmonic separated by commas. 
+# Depending on the selection in ``Settings.inp`` this file either outputs (to screen via print) a single number (the $S$ metric) or the full list of sum of squares values for each harmonic separated by commas. 
 # 
 # This is output via a print statement so it can be picked up by an echo command in the looping bash script (created by ``GenerateScript.ipynb``). There it is combined with the input parameters and appended to the ``Results.txt`` output file from the whole loop.
 
-# In[21]:
+# In[ ]:
 
 if(iUseSingleMetric==1): # use total metric
     print Smetric
@@ -190,7 +192,7 @@ else: # use each harmonic split by commas
 # 
 # Simulation in red, experimental data in black. Harmonic 0 is dc and this example goes up to the 5th harmonic.
 
-# In[145]:
+# In[ ]:
 
 if(plotInteractive):
     import matplotlib.pyplot as plt
