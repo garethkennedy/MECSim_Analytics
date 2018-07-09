@@ -160,6 +160,12 @@ input_parameters = input_data[0:n_data, 0:(output_first_index)]
 input_metrics    = input_data[0:n_data, output_first_index:n_cols]
 
 
+# In[13]:
+
+print(results_file_name)
+print(input_metrics)
+
+
 # <a id="ref_bayes_theory"></a>
 # ## Bayesian analysis
 # 
@@ -203,7 +209,7 @@ input_metrics    = input_data[0:n_data, output_first_index:n_cols]
 # 
 # Back to <a href="#top">top</a>.
 
-# In[13]:
+# In[14]:
 
 if(iLoadPriors):
     print('Loading priors from ', priors_filename)
@@ -226,45 +232,47 @@ else:
 # 
 # Back to <a href="#top">top</a>.
 
-# In[14]:
+# In[15]:
 
 ## some issue with coding for P_Mi_Dk != 1!!!! when not using single metric
 n_metrics = np.shape(input_metrics)[1]
 P_Mi = priors
+posteriors_store = []
 # get P(D_k | M_i)
 for k in range(n_metrics):
-    ls_ki = input_metrics[0:n_data, k]
-    P_Dk_Mi = 1.0/(ls_ki + epsilon)
-    P_Dk_Mi_P_Mi = P_Dk_Mi*np.transpose(P_Mi)
-    P_Mi_Dk = P_Dk_Mi_P_Mi / P_Dk_Mi_P_Mi.sum()
+    sos_ki = input_metrics[0:n_data, k]
+    P_Dk_Mi = np.divide(1.0, sos_ki + epsilon)
+    P_Dk_Mi_P_Mi = np.array([P_Dk_Mi[i]*P_Mi[i] for i in range(n_data)])
+    P_sum = np.array(P_Dk_Mi_P_Mi).sum()
+    if(P_sum > 0.0):
+        P_Mi_Dk = np.array([P_Dk_Mi_P_Mi[i] / P_sum for i in range(n_data)]).reshape(n_data)
+    else: # no new data - posterior = prior
+        P_Mi_Dk = P_Mi
+    # store posterior for this harmonic/metric
+    posteriors_store.append(P_Mi_Dk)
+    # set prior for next round to current posterior
     P_Mi = P_Mi_Dk
 # transform output into a array of correct length
-P_Mi_Dk = np.array(P_Mi_Dk[0,:])
-
-
-# In[1]:
-
-# this should be the length of n_data (=2 for this sample!)
-#priors
+posteriors_store = np.array(posteriors_store)
 
 
 # <a id="ref_posteriors"></a>
 # ## Save posteriors
 # 
-# Calculate output posterior
+# Save csv text file with the input metrics as well as the posterior values for each harmonic.
 # 
 # Back to <a href="#top">top</a>.
 
-# In[15]:
+# In[16]:
 
 parameters = input_parameters.reshape(n_data, output_first_index)
-values = P_Mi_Dk.reshape(n_data, n_metrics)
+values = posteriors_store.reshape(n_data, n_metrics)
 posterior = np.concatenate((parameters, values), axis=1)
 
 
 # Output to csv file
 
-# In[ ]:
+# In[17]:
 
 if(iSavePosterior):
     np.savetxt(posterior_filename, posterior, fmt='%.8e', delimiter=",")
@@ -283,7 +291,7 @@ if(iSavePosterior):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[ ]:
+# In[18]:
 
 interpolator = NearestNDInterpolator(x=parameters, y=values)
 
@@ -292,36 +300,38 @@ interpolator = NearestNDInterpolator(x=parameters, y=values)
 # 
 # Loop over each parameter along the range of possible values while fixing all other parameters to their optimal values.
 # 
-# 
+# In development - need to extend this to non-grid runs
 
-# In[ ]:
+# In[19]:
 
-n_res = 100
-opt_index = np.argmax(P_Mi_Dk)
-opt_paras = input_parameters[opt_index,:]
-opt_min = np.min(parameters, axis=0)
-opt_max = np.max(parameters, axis=0)
-opt_para_p = opt_paras.copy()
-opt_para_m = opt_paras.copy()
-for i in range(len(opt_paras)):
-    # create x_i line
-    opt_xi = np.linspace(opt_min[i], opt_max[i], num=n_res, endpoint=True)
-    val_xi = opt_xi.copy()
-    opt_test = opt_paras.copy()
-    for j in range(len(opt_xi)):
-        opt_test[i] = opt_xi[j]
-        val_xi[j] = interpolator(opt_test)
-    # scale in xi direction by sum_xi
-    sum_xi = np.sum(val_xi)
-    val_xi = val_xi/sum_xi
-    cum_xi = np.cumsum(val_xi)
-    # interpolate for med - 1 st.dev = 0.159
-    opt_para_m[i] = np.interp(0.159, cum_xi, opt_xi)
-    # interpolate for med + 1 st.dev = 0.841
-    opt_para_p[i] = np.interp(0.841, cum_xi, opt_xi)
-print("opt-1sd = ", opt_para_m)
-print("opt     = ", opt_paras)
-print("opt+1sd = ", opt_para_p)
+iDoParameterOptimization = False
+if(iDoParameterOptimization):
+    n_res = 100
+    opt_index = np.argmax(P_Mi_Dk)
+    opt_paras = input_parameters[opt_index,:]
+    opt_min = np.min(parameters, axis=0)
+    opt_max = np.max(parameters, axis=0)
+    opt_para_p = opt_paras.copy()
+    opt_para_m = opt_paras.copy()
+    for i in range(len(opt_paras)):
+        # create x_i line
+        opt_xi = np.linspace(opt_min[i], opt_max[i], num=n_res, endpoint=True)
+        val_xi = opt_xi.copy()
+        opt_test = opt_paras.copy()
+        for j in range(len(opt_xi)):
+            opt_test[i] = opt_xi[j]
+            val_xi[j] = interpolator(opt_test)
+        # scale in xi direction by sum_xi
+        sum_xi = np.sum(val_xi)
+        val_xi = val_xi/sum_xi
+        cum_xi = np.cumsum(val_xi)
+        # interpolate for med - 1 st.dev = 0.159
+        opt_para_m[i] = np.interp(0.159, cum_xi, opt_xi)
+        # interpolate for med + 1 st.dev = 0.841
+        opt_para_p[i] = np.interp(0.841, cum_xi, opt_xi)
+    print("opt-1sd = ", opt_para_m)
+    print("opt     = ", opt_paras)
+    print("opt+1sd = ", opt_para_p)
 
 
 # <a id="ref_output_error_bars"></a>
@@ -334,7 +344,7 @@ print("opt+1sd = ", opt_para_p)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[ ]:
+# In[20]:
 
 if(iSaveParameters):
     # round values
@@ -357,7 +367,7 @@ if(iSaveParameters):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[ ]:
+# In[21]:
 
 if(iPlotOutput):
     # set names
@@ -388,7 +398,7 @@ if(iPlotOutput):
 # 
 # Overall resolution, aesthetic buffer around plot region and enter interactive mode (if requested)
 
-# In[ ]:
+# In[22]:
 
 if(iPlotOutput):
     # set overall data resolution
@@ -410,7 +420,7 @@ if(iPlotOutput):
 # 
 # The default aesthetic settings and axes labels can be changed here.
 
-# In[ ]:
+# In[23]:
 
 if(iPlotOutput):
     deltax = (xplotmax - xplotmin)/float(nx)
