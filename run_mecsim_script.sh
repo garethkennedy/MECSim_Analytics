@@ -1,15 +1,16 @@
 #!/bin/bash
 i=1
 imax=10
-echo '$Ezero,$kzero,$DiffB,S' > results.txt
+echo 'class,$Ezero,$kzero,$DiffB,S' > results_ml.txt
 while [ $i -le $imax ]
 do
   i=$((i+1))
   cp script/Master.sk ./Master.inp
+  paraString=E
     x=$(python python/ReturnRandomExpFormat.py -0.1 0.1 False)
     sed -i 's/$Ezero/'$x'/g' ./Master.inp
     echo '$Ezero' $x
-    paraString=$x
+    paraString=$paraString,$x
     x=$(python python/ReturnRandomExpFormat.py 0.01 10000.0 True)
     sed -i 's/$kzero/'$x'/g' ./Master.inp
     echo '$kzero' $x
@@ -19,9 +20,9 @@ do
     echo '$DiffB' $x
     paraString=$paraString,$x
     ./MECSim.exe 2>errors.txt
-    mv log.txt output/log_$i.txt
     python python/HarmonicSplitter.py
-    z=$(python python/CompareSmoothed.py)
-    echo $paraString,$z >> results.txt
+    python python/ConvertToMLFormat.py Smoothed.txt
+    mv ml_format.csv output/ml_format_$i.csv
+    echo $paraString,$i >> results_ml.txt
 done
-cp results.txt output/
+cp results_ml.txt output/

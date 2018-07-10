@@ -143,6 +143,9 @@ Experimental_filename = 'MECSim_Example.txt'
 # 
 # Alter the following cell for custom weights. Ensure that this is the same length as the number of harmonics (plus dc)
 # 
+# 
+# **Note: for purely dc cases set ``number_harmonics = 0``**
+# 
 # Back to <a href="#top">top</a>.
 # 
 

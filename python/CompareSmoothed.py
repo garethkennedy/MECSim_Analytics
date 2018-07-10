@@ -21,7 +21,7 @@
 
 # ### Load packages
 
-# In[2]:
+# In[14]:
 
 # import required python packages
 import numpy as np
@@ -34,7 +34,7 @@ import sys
 # Read parameters from the text file ``Settings.inp`` created by ``GenerateScript.ipynb``
 # 
 
-# In[3]:
+# In[15]:
 
 lines = [line.rstrip('\n') for line in open('Settings.inp')]
 filename = lines[0].strip().split()[0]
@@ -49,7 +49,7 @@ weights = np.fromstring(lines[5].strip(), dtype=float, sep=',')
 # 
 # Be default the filenames specifying the smoothed experimental and simulated data used for this comparison are hard wired. Changing these also requires them to be changed in ``HarmonicSplitter.py`` for consistency.
 
-# In[5]:
+# In[16]:
 
 # input the total number of frequencies to check; i.e. all frequencies, harmonics, cross harmonics etc
 # specified in harmonic splitter when this was created
@@ -67,7 +67,7 @@ plotInteractive = False
 
 # Double check that interactive plotting mode is disabled if running this in script mode
 
-# In[6]:
+# In[17]:
 
 thisCodeName = 'CompareSmoothed.py'
 nLength = len(thisCodeName)
@@ -86,7 +86,7 @@ if(tailString==thisCodeName):
 # 
 # First is time, second is dc, after that there are N harmonics
 
-# In[7]:
+# In[18]:
 
 def ReadSmoothed(filename):
     f = open(filename, 'r')
@@ -117,7 +117,7 @@ def ReadSmoothed(filename):
 # 2. Input data must perfectly align in that they should have the same number of data rows in each file
 # 
 
-# In[8]:
+# In[19]:
 
 def ScaledSumOfSquares(y1, y2): # first is the basis for comparision
     S = 0.0
@@ -135,7 +135,7 @@ def ScaledSumOfSquares(y1, y2): # first is the basis for comparision
 # 
 # Read experimental and simulation data files using defined function
 
-# In[9]:
+# In[20]:
 
 smoothed_exp = ReadSmoothed(filename_exp)
 smoothed_sim = ReadSmoothed(filename_sim)
@@ -143,12 +143,14 @@ smoothed_sim = ReadSmoothed(filename_sim)
 
 # ### Check data file consistency
 # 
-# Check file structure of both files for the correct number of harmonics as set in ``Settings.inp``
+# Check file structure of both files for the correct number of harmonics as set in ``Settings.inp``.
+# 
+# Smoothed.txt file strucure is $t$, $E_{app}$, $i_{dc}$, $i_{harmonics}$ ($*n$)
 
-# In[ ]:
+# In[21]:
 
-n_found_harm_exp = len(smoothed_exp[0, :]) - 2
-n_found_harm_sim = len(smoothed_sim[0, :]) - 2
+n_found_harm_exp = len(smoothed_exp[0, :]) - 3
+n_found_harm_sim = len(smoothed_sim[0, :]) - 3
 if(number_harmonics!=n_found_harm_sim) or (number_harmonics!=n_found_harm_exp):
     print "WARNING: inconsistent number of harmonics (excluding dc)"
     print "Settings n_harm=", number_harmonics
@@ -160,13 +162,13 @@ if(number_harmonics!=n_found_harm_sim) or (number_harmonics!=n_found_harm_exp):
 # 
 # Calculate the combined metric $S$ accounting for all harmonics with dc first (so +1 for range). We start at column 1 rather than 0 as we do not need to compare the time column (index=0).
 
-# In[ ]:
+# In[23]:
 
 Smetric = 0.0
 S = []
 for i in range(number_harmonics+1):
     # raw sum of squares comparison
-    Sharm = ScaledSumOfSquares(smoothed_sim[:, i+1], smoothed_exp[:, i+1])
+    Sharm = ScaledSumOfSquares(smoothed_sim[:, i+2], smoothed_exp[:, i+2])
     S.append(Sharm)
     Smetric+=Sharm*weights[i]
 
@@ -177,7 +179,7 @@ for i in range(number_harmonics+1):
 # 
 # This is output via a print statement so it can be picked up by an echo command in the looping bash script (created by ``GenerateScript.ipynb``). There it is combined with the input parameters and appended to the ``Results.txt`` output file from the whole loop.
 
-# In[ ]:
+# In[24]:
 
 if(iUseSingleMetric==1): # use total metric
     print Smetric
@@ -192,7 +194,7 @@ else: # use each harmonic split by commas
 # 
 # Simulation in red, experimental data in black. Harmonic 0 is dc and this example goes up to the 5th harmonic.
 
-# In[ ]:
+# In[25]:
 
 if(plotInteractive):
     import matplotlib.pyplot as plt
@@ -223,9 +225,4 @@ if(plotInteractive):
     plt.plot(smoothed_exp[:, 0], smoothed_exp[:, i_harm+1], c='k')
     plt.plot(smoothed_sim[:, 0], smoothed_sim[:, i_harm+1], c='r')
     plt.show()
-
-
-# In[ ]:
-
-
 

@@ -12,14 +12,14 @@
 # This script is typically run in from a bash script without any user interaction. 
 # Set the following option to True if output and plots to screen are required.
 
-# In[14]:
+# In[72]:
 
 plotInteractive = False
 
 
 # ### Load packages
 
-# In[15]:
+# In[73]:
 
 # import required python packages
 import numpy as np
@@ -32,7 +32,7 @@ import sys
 
 # Double check that interactive plotting mode is disabled if running this in script mode
 
-# In[ ]:
+# In[74]:
 
 thisCodeName = 'HarmonicSplitter.py'
 nLength = len(thisCodeName)
@@ -46,7 +46,7 @@ if(tailString==thisCodeName):
 # 
 # Read file names and parameters from settings file made by GenerateScript
 
-# In[16]:
+# In[75]:
 
 lines = [line.rstrip('\n') for line in open('Settings.inp')]
 filename = lines[0].strip().split()[0]
@@ -61,7 +61,7 @@ weights = np.fromstring(lines[5].strip(), dtype=float, sep=',')
 # 
 # Read the data file using the format from POT software also used as default by MECSim. Time, current then applied potential
 
-# In[17]:
+# In[76]:
 
 # load POT output file
 # t_MS2, i_MS2, e_MS2 = ReadPOTFile('Raw/GC06_FeIII-1mM_1M-KCl_02_009Hz.txt', tmin, tmax)
@@ -99,7 +99,7 @@ def ReadPOTFileFreq(filename):
 
 # Smooth the current as an envelope of the current as a function of time
 
-# In[18]:
+# In[77]:
 
 def SmoothCurrent(t, i, e, tWindow):
     iSmooth = list(i)
@@ -128,7 +128,7 @@ def SmoothCurrent(t, i, e, tWindow):
 # Critical values to return are: nfreq, freq, time, current, eapp. Can ignore: iCount, amp
 # 
 
-# In[19]:
+# In[127]:
 
 iCount, nfreq, freq, amp, time, current, eapp = ReadPOTFileFreq(filename)
 t = np.array(time)
@@ -139,33 +139,45 @@ ea = np.array(eapp)
 # Isolate ac fundamental frequencies
 # ---
 
-# In[20]:
+# In[128]:
 
-freqMin = min(freq[0:nfreq])
+if(nfreq>0):
+    # dc + ac harmonics
+    freqMin = min(freq[0:nfreq])
+else:
+    # dc only
+    freqMin = 1000.
+    number_harmonics = 0
+# set time period for FFT cuts
 tWindow = 1.0/freqMin
 # output if in interactive mode
 if(plotInteractive):
-    print 'f_min = ',freqMin,' ; t_window = ',tWindow
+    print('f_min = ',freqMin,' ; t_window = ',tWindow, ' ; n_harmonics (dc=0th) = ', number_harmonics)
 
 
 # FFT of the time series data
 # ---
 # 
 # Single frequency is assumed for now. Do all harmonics of it (and dc).
+# 
+# Some error catching added for cases without any frequencies.
+# 
+# DC will now take the FFT with $f<f_{min}$ for cases with harmonics or $f_{min}$ = 1000 Hz equivalent if DC only.
 
-# In[21]:
+# In[118]:
 
 i_Harm = []
 c_Harm = []
 
+# special treatment for dc (harmonic = 0)
 W = fftfreq(c.size, d=2*(t[1]-t[0]))
 f_signal = rfft(c)
 cut_f_signal = f_signal.copy()
-cut_f_signal[(W>0.5*freq[0])] = 0
+cut_f_signal[(W>0.5*freqMin)] = 0
 cut_signal = irfft(cut_f_signal)
-# special treatment for dc (harmonic = 0)
 c_Harm.append(cut_signal)
 i_Harm.append(SmoothCurrent(t, cut_signal, eapp, tWindow))
+
 # frequency based harmonics (n*freq)
 for iH in range(number_harmonics):
     iHarm = iH + 1
@@ -184,16 +196,19 @@ for iH in range(number_harmonics):
 # 
 # Use Python Data Analysis (pandas) library to slice data and add time as first column for csv output
 
-# In[22]:
+# In[121]:
 
 output_df = pd.DataFrame(i_Harm)
 output_df = output_df.transpose()
+# add Eapp at the start
+output_df.insert(loc=0, column='ea', value=ea)
+# add time at the start (so Eapp becomes next col)
 output_df.insert(loc=0, column='t', value=t)
 
 
 # Output modified data frame to csv file. Will be read and compared to experimental counterpart by CompareSmoothed.py
 
-# In[23]:
+# In[122]:
 
 np.savetxt( 'Smoothed.txt', output_df)
 
@@ -202,7 +217,7 @@ np.savetxt( 'Smoothed.txt', output_df)
 # 
 # ONLY if not using this in bash script
 
-# In[24]:
+# In[123]:
 
 if(plotInteractive):
     import matplotlib.pyplot as plt
@@ -210,10 +225,11 @@ if(plotInteractive):
     for i in range(number_harmonics):
         iH = i+1
         plt.plot(t, i_Harm[iH],c='r')
-    plt.show()
+    if(number_harmonics>1):
+        plt.show()
 
 
-# In[25]:
+# In[124]:
 
 if(plotInteractive):
     plt.subplot(221)
@@ -229,11 +245,19 @@ if(plotInteractive):
     plt.show()
 
 
-# In[26]:
+# In[125]:
 
 if(plotInteractive):
-    iH = 1
+    iH = 0
     plt.plot(t, c_Harm[iH],c='k')
     plt.plot(t, i_Harm[iH],c='r')
+    plt.show()
+
+
+# In[126]:
+
+if(plotInteractive):
+    iH = 0
+    plt.plot(ea, i_Harm[iH],c='r')
     plt.show()
 
