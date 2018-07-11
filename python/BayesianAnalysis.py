@@ -32,7 +32,7 @@
 # 
 # General parameters and filesnames which will be ignored depending on the options.
 
-# In[6]:
+# In[21]:
 
 # Set an artifical minimum for the metric value(s) - to avoid Prob=1/0 if sum of squares = 0
 epsilon = 1.0e-6
@@ -55,13 +55,16 @@ posterior_filename = "posterior.txt"
 iSaveParameters = True
 opt_para_filename = "opt_parameters.txt"
 
+# flag to perform optimial parameters finding including error bars - only useful for independent/simple runs at present
+iDoParameterOptimization = False
+
 
 # <a id="ref_plot_paras"></a>
 # ## Plotting parameters (optional)
 # 
 # Plot a contour plot for the final probabilities against two parameters selected by their column number in the results file.
 
-# In[7]:
+# In[22]:
 
 # Plot output to png, pdf files)
 iPlotOutput = True
@@ -80,7 +83,7 @@ iy = 1
 
 # ## Load packages
 
-# In[8]:
+# In[23]:
 
 # load system functions for inputting arguments at command line
 import sys
@@ -102,7 +105,7 @@ if(iPlotOutput):
 # 1. this file is run from the command line, so the first argument is the name of this python file (py rather than ipynb).
 # 2. running in interactive mode - through a jupyter notebook say. In which case we use the default file name set above.
 
-# In[9]:
+# In[24]:
 
 thisCodeName = 'BayesianAnalysis.py'
 nLength = len(thisCodeName)
@@ -121,7 +124,7 @@ else:
 # 
 # Use header line to determine the number of input parameters compared to the number of result values
 
-# In[10]:
+# In[25]:
 
 lines = [line.rstrip('\n') for line in open(results_file_name)]
 
@@ -145,7 +148,7 @@ n_cols = np.shape(input_data)[1]
 
 # Sort by parameters first - in case of an issue with loading priors later
 
-# In[11]:
+# In[26]:
 
 input_data = input_data[input_data[:,(output_first_index-1)].argsort()]
 for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
@@ -154,15 +157,16 @@ for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
 
 # Collect input parameters and sum of squares metrics
 
-# In[12]:
+# In[27]:
 
 input_parameters = input_data[0:n_data, 0:(output_first_index)]
 input_metrics    = input_data[0:n_data, output_first_index:n_cols]
 
 
-# In[13]:
+# In[28]:
 
 print(results_file_name)
+print(input_parameters)
 print(input_metrics)
 
 
@@ -209,7 +213,7 @@ print(input_metrics)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[14]:
+# In[29]:
 
 if(iLoadPriors):
     print('Loading priors from ', priors_filename)
@@ -232,7 +236,7 @@ else:
 # 
 # Back to <a href="#top">top</a>.
 
-# In[15]:
+# In[60]:
 
 ## some issue with coding for P_Mi_Dk != 1!!!! when not using single metric
 n_metrics = np.shape(input_metrics)[1]
@@ -263,16 +267,16 @@ posteriors_store = np.array(posteriors_store)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[16]:
+# In[61]:
 
 parameters = input_parameters.reshape(n_data, output_first_index)
-values = posteriors_store.reshape(n_data, n_metrics)
+values = posteriors_store.reshape((n_metrics, n_data)).T
 posterior = np.concatenate((parameters, values), axis=1)
 
 
 # Output to csv file
 
-# In[17]:
+# In[62]:
 
 if(iSavePosterior):
     np.savetxt(posterior_filename, posterior, fmt='%.8e', delimiter=",")
@@ -291,20 +295,23 @@ if(iSavePosterior):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[18]:
+# In[33]:
 
 interpolator = NearestNDInterpolator(x=parameters, y=values)
 
 
-# ### Loop over each paramater
+# ### Loop over each parameter
 # 
 # Loop over each parameter along the range of possible values while fixing all other parameters to their optimal values.
 # 
 # In development - need to extend this to non-grid runs
 
-# In[24]:
+# In[37]:
 
-iDoParameterOptimization = False
+
+# Optimal parameters (default is they exist)
+iHaveOpt = True
+# find optimal parameters
 if(iDoParameterOptimization):
     n_res = 100
     opt_index = np.argmax(P_Mi_Dk)
@@ -332,6 +339,11 @@ if(iDoParameterOptimization):
     print("opt-1sd = ", opt_para_m)
     print("opt     = ", opt_paras)
     print("opt+1sd = ", opt_para_p)
+else:
+    # nothing to output so nothing to save
+    iSaveParameters = False
+    # Optimal parameters
+    iHaveOpt = False
 
 
 # <a id="ref_output_error_bars"></a>
@@ -344,7 +356,7 @@ if(iDoParameterOptimization):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[20]:
+# In[35]:
 
 if(iSaveParameters):
     # round values
@@ -367,7 +379,7 @@ if(iSaveParameters):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[21]:
+# In[38]:
 
 if(iPlotOutput):
     # set names
@@ -386,19 +398,20 @@ if(iPlotOutput):
     yplotmax = np.max(y)
 
     # optimal value and error bars
-    x_opt = opt_paras[ix]
-    y_opt = opt_paras[iy]
-    x_err_m = x_opt - opt_para_m[ix]
-    y_err_m = y_opt - opt_para_m[iy]
-    x_err_p = opt_para_p[ix] - x_opt
-    y_err_p = opt_para_p[iy] - y_opt    
+    if(iHaveOpt):
+        x_opt = opt_paras[ix]
+        y_opt = opt_paras[iy]
+        x_err_m = x_opt - opt_para_m[ix]
+        y_err_m = y_opt - opt_para_m[iy]
+        x_err_p = opt_para_p[ix] - x_opt
+        y_err_p = opt_para_p[iy] - y_opt    
 
 
 # ### Plotting parameters
 # 
 # Overall resolution, aesthetic buffer around plot region and enter interactive mode (if requested)
 
-# In[22]:
+# In[39]:
 
 if(iPlotOutput):
     # set overall data resolution
@@ -420,7 +433,7 @@ if(iPlotOutput):
 # 
 # The default aesthetic settings and axes labels can be changed here.
 
-# In[23]:
+# In[40]:
 
 if(iPlotOutput):
     deltax = (xplotmax - xplotmin)/float(nx)
@@ -488,7 +501,7 @@ if(iPlotOutput):
     else: # label the contours
         plt.clabel(CS, CS.levels, inline=True, fmt=fmt, fontsize=12)
     # plot optimal values
-    if(iPlotFit):
+    if(iPlotFit and iHaveOpt):
         plt.scatter(x_opt, y_opt, marker = 'o', c = 'white', s = 100, zorder = 10)
 
     

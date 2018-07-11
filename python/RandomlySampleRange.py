@@ -345,7 +345,7 @@ if(method_type=='random'):
             text_file.write("python {0}HarmonicSplitter.py\n".format(python_dir))
             text_file.write("mv Smoothed.txt {0} \n".format(Experimental_FFT_output_filename))
         # setup parameter ranges
-        text_file.write("i=1\n")
+        text_file.write("i=0\n")
         text_file.write("imax={0}\n".format(n_simulations))
         # write header for results output file - else will append
         if(not results_exists):
