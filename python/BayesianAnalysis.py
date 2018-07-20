@@ -32,7 +32,7 @@
 # 
 # General parameters and filesnames which will be ignored depending on the options.
 
-# In[21]:
+# In[ ]:
 
 # Set an artifical minimum for the metric value(s) - to avoid Prob=1/0 if sum of squares = 0
 epsilon = 1.0e-6
@@ -64,7 +64,7 @@ iDoParameterOptimization = False
 # 
 # Plot a contour plot for the final probabilities against two parameters selected by their column number in the results file.
 
-# In[22]:
+# In[ ]:
 
 # Plot output to png, pdf files)
 iPlotOutput = True
@@ -83,7 +83,7 @@ iy = 1
 
 # ## Load packages
 
-# In[23]:
+# In[ ]:
 
 # load system functions for inputting arguments at command line
 import sys
@@ -105,7 +105,7 @@ if(iPlotOutput):
 # 1. this file is run from the command line, so the first argument is the name of this python file (py rather than ipynb).
 # 2. running in interactive mode - through a jupyter notebook say. In which case we use the default file name set above.
 
-# In[24]:
+# In[ ]:
 
 thisCodeName = 'BayesianAnalysis.py'
 nLength = len(thisCodeName)
@@ -124,7 +124,7 @@ else:
 # 
 # Use header line to determine the number of input parameters compared to the number of result values
 
-# In[25]:
+# In[ ]:
 
 lines = [line.rstrip('\n') for line in open(results_file_name)]
 
@@ -148,7 +148,7 @@ n_cols = np.shape(input_data)[1]
 
 # Sort by parameters first - in case of an issue with loading priors later
 
-# In[26]:
+# In[ ]:
 
 input_data = input_data[input_data[:,(output_first_index-1)].argsort()]
 for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
@@ -157,17 +157,10 @@ for i in np.arange(output_first_index-2, -1, -1): # excludes stop so final is 0
 
 # Collect input parameters and sum of squares metrics
 
-# In[27]:
+# In[ ]:
 
 input_parameters = input_data[0:n_data, 0:(output_first_index)]
 input_metrics    = input_data[0:n_data, output_first_index:n_cols]
-
-
-# In[28]:
-
-print(results_file_name)
-print(input_parameters)
-print(input_metrics)
 
 
 # <a id="ref_bayes_theory"></a>
@@ -213,7 +206,7 @@ print(input_metrics)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[29]:
+# In[ ]:
 
 if(iLoadPriors):
     print('Loading priors from ', priors_filename)
@@ -236,9 +229,8 @@ else:
 # 
 # Back to <a href="#top">top</a>.
 
-# In[60]:
+# In[ ]:
 
-## some issue with coding for P_Mi_Dk != 1!!!! when not using single metric
 n_metrics = np.shape(input_metrics)[1]
 P_Mi = priors
 posteriors_store = []
@@ -267,7 +259,7 @@ posteriors_store = np.array(posteriors_store)
 # 
 # Back to <a href="#top">top</a>.
 
-# In[61]:
+# In[ ]:
 
 parameters = input_parameters.reshape(n_data, output_first_index)
 values = posteriors_store.reshape((n_metrics, n_data)).T
@@ -276,7 +268,7 @@ posterior = np.concatenate((parameters, values), axis=1)
 
 # Output to csv file
 
-# In[62]:
+# In[ ]:
 
 if(iSavePosterior):
     np.savetxt(posterior_filename, posterior, fmt='%.8e', delimiter=",")
@@ -295,7 +287,7 @@ if(iSavePosterior):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[33]:
+# In[ ]:
 
 interpolator = NearestNDInterpolator(x=parameters, y=values)
 
@@ -306,7 +298,7 @@ interpolator = NearestNDInterpolator(x=parameters, y=values)
 # 
 # In development - need to extend this to non-grid runs
 
-# In[37]:
+# In[ ]:
 
 
 # Optimal parameters (default is they exist)
@@ -356,7 +348,7 @@ else:
 # 
 # Back to <a href="#top">top</a>.
 
-# In[35]:
+# In[ ]:
 
 if(iSaveParameters):
     # round values
@@ -379,7 +371,7 @@ if(iSaveParameters):
 # 
 # Back to <a href="#top">top</a>.
 
-# In[38]:
+# In[ ]:
 
 if(iPlotOutput):
     # set names
@@ -411,7 +403,7 @@ if(iPlotOutput):
 # 
 # Overall resolution, aesthetic buffer around plot region and enter interactive mode (if requested)
 
-# In[39]:
+# In[ ]:
 
 if(iPlotOutput):
     # set overall data resolution
@@ -433,7 +425,7 @@ if(iPlotOutput):
 # 
 # The default aesthetic settings and axes labels can be changed here.
 
-# In[40]:
+# In[ ]:
 
 if(iPlotOutput):
     deltax = (xplotmax - xplotmin)/float(nx)
