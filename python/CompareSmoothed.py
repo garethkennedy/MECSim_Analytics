@@ -145,12 +145,12 @@ smoothed_sim = ReadSmoothed(filename_sim)
 # 
 # Check file structure of both files for the correct number of harmonics as set in ``Settings.inp``.
 # 
-# Smoothed.txt file strucure is $t$, $E_{app}$, $i_{dc}$, $i_{harmonics}$ ($*n$)
+# Smoothed.txt file strucure is $t$, $E_{dc}$, $E_{app}$, $i_{dc}$, $i_{harmonics}$ ($*n$)
 
 # In[21]:
 
-n_found_harm_exp = len(smoothed_exp[0, :]) - 3
-n_found_harm_sim = len(smoothed_sim[0, :]) - 3
+n_found_harm_exp = len(smoothed_exp[0, :]) - 4
+n_found_harm_sim = len(smoothed_sim[0, :]) - 4
 if(number_harmonics!=n_found_harm_sim) or (number_harmonics!=n_found_harm_exp):
     print "WARNING: inconsistent number of harmonics (excluding dc)"
     print "Settings n_harm=", number_harmonics
@@ -167,8 +167,8 @@ if(number_harmonics!=n_found_harm_sim) or (number_harmonics!=n_found_harm_exp):
 Smetric = 0.0
 S = []
 for i in range(number_harmonics+1):
-    # raw sum of squares comparison
-    Sharm = ScaledSumOfSquares(smoothed_sim[:, i+2], smoothed_exp[:, i+2])
+    # raw sum of squares comparison (skip t, e_dc, e_app)
+    Sharm = ScaledSumOfSquares(smoothed_sim[:, i+3], smoothed_exp[:, i+3])
     S.append(Sharm)
     Smetric+=Sharm*weights[i]
 

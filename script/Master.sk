@@ -37,6 +37,7 @@
 80.0e0, 9.0		! AC sin wave: amp (mV), freq(Hz) (REPEAT)
 3		! number of species (need n lines below)
 1.0e-6, 1.0e-5, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+<<<<<<< HEAD
 0.0e-6, 1.0e-5, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
 0.0e-6, 1.0e-5, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
 0		! maximum a^n term for a capacitance given by C = a_0 + a_1 V + a_2 V^2 + ... + a_n V^n, where V = Eapp - iR - E pzc. Make sure there are enough lines below to go to a^n
@@ -44,3 +45,12 @@
 10.0e-6	! a_0 term (F/cm^2)
 0, -1, 1, 0, 0.0e1, 0.0e1, $Ezero1, $kzero, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
 0, 0, -1, 1, 0.0e1, 0.0e1, $Ezero2, $kzero, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+=======
+0.0e-6, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+0.0e-6, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+0		! maximum a^n term for a capacitance given by C = a_0 + a_1 V + a_2 V^2 + ... + a_n V^n, where V = Eapp - iR - E pzc. Make sure there are enough lines below to go to a^n
+0.50		! Epzc (Volts)
+10.0e-6	! a_0 term (F/cm^2)
+0, -1, 1, 0, 0.0e1, 0.0e1, 0.3, $kzero, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+0, 0, -1, 1, 0.0e1, 0.0e1, $Ezero, $kzero, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+>>>>>>> master
