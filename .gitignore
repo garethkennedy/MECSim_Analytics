@@ -7,3 +7,6 @@ src/
 
 # ML python codes - keep off repo for now
 python_ml/
+
+# output files
+output/
