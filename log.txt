@@ -1,0 +1,117 @@
+
+ *****************************************************
+                 MECSim - GK 7/08/2016
+ *****************************************************
+
+
+
+ General parameters:
+      Temperature =   300.0000
+  Uncompensated R =        0.0
+
+ Voltage ramp (V):
+      E_start =   0.5000
+        E_rev =  -0.5000
+        E_end =   0.5000
+       Cycles =    1
+  Total range =   2.0000
+
+ Scan rate (V/s) =   7.45058060E-02
+  Final time (s) =   2.68435456E+01
+
+Found   1 AC signal(s). Max frequency =   0.0000 Hz
+          0.0000 mV at     9.0152 Hz
+
+ Capacitor of order V^ 0
+
+
+ Found a total of   4 species
+
+ No pre-equilibriation; use entered concentrations
+
+ Summary of solution reactions:
+     Charge transfer =  1
+      1st Order Chem =  1
+      2nd Order Chem =  0
+ Summary of surface confined reactions:
+     Charge transfer =  0
+      1st Order Chem =  0
+      2nd Order Chem =  0
+
+ Charge transfer reaction(s):
+     A +  1e = B       ; E0 =   0.073 , ks =   1.2034E-03 cm/s , alpha =   0.59
+                       ; K_eqm =   1.4726E+07
+ First order chemical reaction(s):
+     B = C             ; kf =   0.000000E+00 s^-1 , kb =   0.000000E+00 s^-1
+                       ; K_eqm =   0.0000E+00
+
+ Electrode geometry:
+   Planar with area =   1.00000000E+00 cm^2
+
+ Technical details of simulation
+   Using Butler-Volmer Theory
+   Points in time = 2^14 =    16384
+   delt =   1.6384E-03 and delE =   1.2207E-04
+    Exponential spatial grid with  58 points and delx(0) =   3.8313E-05
+   x =   1.8678E-05  5.8956E-05  1.0347E-04  1.5266E-04 |   1.1409E-01
+
+ Solution phase:
+ Initial scaled concentrations and diffusion coeff (cm2/s)
+ [A] =   1.00000000E-05 ; D =   1.00000000E-05
+           (1.00000000)
+ [B] =   0.00000000E+00 ; D =   8.95944113E-06
+           (0.00000000)
+ [C] =   0.00000000E+00 ; D =   8.95944113E-06
+           (0.00000000)
+ [D] =   0.00000000E+00 ; D =   8.95944113E-06
+           (0.00000000)
+ Concentrations scaled by   1.00000000E-05 mol/cm3
+                            1.00000000E+01 mM
+
+
+ ************** Starting Time Loop ******************
+
+ Done  10%; t,Eapp,i =   2.68E+00  3.00E-01 -5.89E-06,  C_err=  7.44E-06
+    0.9999    0.0001    0.0000    0.0000    0.0000    0.0000
+ Done  20%; t,Eapp,i =   5.37E+00  1.00E-01 -4.04E-04,  C_err=  5.21E-03
+    0.9078    0.0974    0.0000    0.0000    0.0000    0.0000
+ Done  30%; t,Eapp,i =   8.05E+00 -1.00E-01 -1.49E-03,  C_err=  5.50E-02
+    0.0254    1.0296    0.0000    0.0000    0.0000    0.0000
+ Done  40%; t,Eapp,i =   1.07E+01 -3.00E-01 -8.48E-04,  C_err=  5.65E-02
+    0.0001    1.0563    0.0000    0.0000    0.0000    0.0000
+ Done  50%; t,Eapp,i =   1.34E+01 -5.00E-01 -6.60E-04,  C_err=  5.65E-02
+    0.0000    1.0565    0.0000    0.0000    0.0000    0.0000
+ Done  60%; t,Eapp,i =   1.61E+01 -3.00E-01 -5.49E-04,  C_err=  5.65E-02
+    0.0001    1.0564    0.0000    0.0000    0.0000    0.0000
+ Done  70%; t,Eapp,i =   1.88E+01 -1.00E-01 -4.50E-04,  C_err=  5.60E-02
+    0.0087    1.0473    0.0000    0.0000    0.0000    0.0000
+ Done  80%; t,Eapp,i =   2.15E+01  1.00E-01  8.29E-04,  C_err=  3.28E-02
+    0.4186    0.6142    0.0000    0.0000    0.0000    0.0000
+ Done  90%; t,Eapp,i =   2.42E+01  3.00E-01  7.90E-04,  C_err=  1.02E-03
+    0.9820    0.0190    0.0000    0.0000    0.0000    0.0000
+ Done 100%; t,Eapp,i =   2.68E+01  5.00E-01  3.88E-04,  C_err=  2.14E-05
+    0.9996    0.0004    0.0000    0.0000    0.0000    0.0000
+
+ Concentration min/max values:
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    1.0000    1.0565    0.0000    0.0000    0.0000    0.0000
+
+ ****************************************************
+
+ Current minimum =  -2.04938884E-03 and maximum =   1.28832257E-03
+ Voltage minimum =  -1.95312500E-02 and maximum =   1.74926758E-01
+
+   Average number of iterations at electrode surface =    1.869
+ Average number of iterations for chemical reactions =    1.000
+ Average ODE calculations for iterating surface conf =    0.000
+  Average ODE calculations for bounding surface conf =    0.000
+
+ Final scaled concentrations on spatial grid
+ [A] =   9.99620292E-01  9.98858982E-01  9.97217365E-01 |   9.99999853E-01
+ [B] =   4.01151562E-04  1.25088019E-03  3.08314931E-03 |   4.30901130E-08
+ [C] =   0.00000000E+00  0.00000000E+00  0.00000000E+00 |   0.00000000E+00
+ [D] =   0.00000000E+00  0.00000000E+00  0.00000000E+00 |   0.00000000E+00
+
+
+ Output file written to MECSimOutput_Pot.txt
+
