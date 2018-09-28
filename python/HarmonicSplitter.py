@@ -12,14 +12,14 @@
 # This script is typically run in from a bash script without any user interaction. 
 # Set the following option to True if output and plots to screen are required.
 
-# In[10]:
+# In[31]:
 
-plotInteractive = True
+plotInteractive = False
 
 
 # ### Load packages
 
-# In[11]:
+# In[32]:
 
 # import required python packages
 import numpy as np
@@ -32,7 +32,7 @@ import sys
 
 # Double check that interactive plotting mode is disabled if running this in script mode
 
-# In[12]:
+# In[33]:
 
 thisCodeName = 'HarmonicSplitter.py'
 nLength = len(thisCodeName)
@@ -46,7 +46,7 @@ if(tailString==thisCodeName):
 # 
 # Read file names and parameters from settings file made by GenerateScript
 
-# In[13]:
+# In[34]:
 
 lines = [line.rstrip('\n') for line in open('Settings.inp')]
 filename = lines[0].strip().split()[0]
@@ -61,7 +61,7 @@ weights = np.fromstring(lines[5].strip(), dtype=float, sep=',')
 # 
 # Read the data file using the format from POT software also used as default by MECSim. Time, current then applied potential
 
-# In[14]:
+# In[35]:
 
 # load POT output file
 # t_MS2, i_MS2, e_MS2 = ReadPOTFile('Raw/GC06_FeIII-1mM_1M-KCl_02_009Hz.txt', tmin, tmax)
@@ -99,7 +99,7 @@ def ReadPOTFileFreq(filename):
 
 # Smooth the current as an envelope of the current as a function of time
 
-# In[15]:
+# In[36]:
 
 def SmoothCurrent(t, i, e, tWindow):
     iSmooth = list(i)
@@ -128,7 +128,7 @@ def SmoothCurrent(t, i, e, tWindow):
 # Critical values to return are: nfreq, freq, time, current, eapp. Can ignore: iCount, amp
 # 
 
-# In[16]:
+# In[37]:
 
 iCount, nfreq, freq, amp, time, current, eapp = ReadPOTFileFreq(filename)
 t = np.array(time)
@@ -139,7 +139,7 @@ ea = np.array(eapp)
 # Isolate ac fundamental frequencies
 # ---
 
-# In[17]:
+# In[38]:
 
 if(nfreq>0):
     # dc + ac harmonics
@@ -164,7 +164,7 @@ if(plotInteractive):
 # 
 # DC will now take the FFT with $f<f_{min}$ for cases with harmonics or $f_{min}$ = 1000 Hz equivalent if DC only.
 
-# In[25]:
+# In[39]:
 
 i_Harm = []
 c_Harm = []
@@ -213,7 +213,7 @@ for iH in range(number_harmonics):
 # 
 # Use Python Data Analysis (pandas) library to slice data and add time as first column for csv output
 
-# In[27]:
+# In[40]:
 
 output_df = pd.DataFrame(i_Harm)
 output_df = output_df.transpose()
@@ -227,7 +227,7 @@ output_df.insert(loc=0, column='t', value=t)
 
 # Output modified data frame to csv file. Will be read and compared to experimental counterpart by CompareSmoothed.py
 
-# In[28]:
+# In[41]:
 
 np.savetxt( 'Smoothed.txt', output_df)
 
@@ -236,7 +236,7 @@ np.savetxt( 'Smoothed.txt', output_df)
 # 
 # ONLY if not using this in bash script
 
-# In[29]:
+# In[42]:
 
 if(plotInteractive):
     import matplotlib.pyplot as plt
@@ -248,7 +248,7 @@ if(plotInteractive):
         plt.show()
 
 
-# In[30]:
+# In[43]:
 
 # plot the dc component
 if(plotInteractive):
@@ -266,7 +266,7 @@ if(plotInteractive):
     
 
 
-# In[31]:
+# In[44]:
 
 if(plotInteractive):
     iH = 0
@@ -275,7 +275,7 @@ if(plotInteractive):
     plt.show()
 
 
-# In[32]:
+# In[45]:
 
 if(plotInteractive):
     iH = 0
