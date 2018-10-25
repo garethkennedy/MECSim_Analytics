@@ -1,9 +1,9 @@
 300		! Temperature (K)
-10.0		! uncompensated resistance (ohms)
+$R		! uncompensated resistance (ohms)
 0.500	! E_start (V)
 -0.500	! E_rev (V)
 1		! number of cycles
-0.01	! scan speed (V/s)
+0.1	! scan speed (V/s)
 14		! 2^N points in time across n cycles (int)
 1		! correct vscan and freq for DigiPot/FFT (1 = yes, 0 for no)
 1		! output type: 0=E,i,t; 1=DigiPot compatible
@@ -23,7 +23,7 @@
 0.50		! E_rev - REPEAT for more complicated ramps
 -0.50		! E_rev - REPEAT for more complicated ramps
 1		! Geometry type (1=planar, 2=spherical, 3=cylinder, 4=RDE)
-0.10		! Planar: surface area of electrode (cm^2)
+1.0		! Planar: surface area of electrode (cm^2)
 1.0e0		! Number of spheres (can be fractional)
 1.0e-4	! Radius of single sphere (cm)
 0.50e0	! Number of cylinders (can be fractional)
@@ -34,13 +34,14 @@
 1.0e2		! RDE rotation speed (rad/s)
 1.0e-5	! RDE kinematic viscosity (cm^2/s)
 1		! number of AC sources to add (keep 1 with zero amplitude if want DC only)
-10.0e0, 9.0		! AC sin wave: amp (mV), freq(Hz) (REPEAT)
-3		! number of species (need n lines below)
-1.0e-6, 1.0e-5, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
-0.0e-6, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
-0.0e-6, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+0.0e0, 9.0		! AC sin wave: amp (mV), freq(Hz) (REPEAT)
+4		! number of species (need n lines below)
+1.0e-5, 1.0e-5, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+0.0e-5, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+0.0e-5, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
+0.0e-5, $DiffB, 0		! REPEAT: initial concentration of i (mol/cm3 or mol/cm2 if SC), Diffusion coeff for i, D_i [cm2/s], surface confined (=1 for yes, else in solution)
 0		! maximum a^n term for a capacitance given by C = a_0 + a_1 V + a_2 V^2 + ... + a_n V^n, where V = Eapp - iR - E pzc. Make sure there are enough lines below to go to a^n
 0.50		! Epzc (Volts)
-10.0e-6	! a_0 term (F/cm^2)
-0, -1, 1, 0, 0.0e1, 0.0e1, $Ezero, $kzero, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
-1, 0, -1, 1, 1.0e4, $kfirstb, 0.0, 1.0, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+$cap	! a_0 term (F/cm^2)
+0, -1, 1, 0, 0, 0.0e1, 0.0e1, 0.0, $kzero, $alpha ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+0, 0, -1, 1, 0, 0.0e1, 0.0e1, $Ezero, $kzero, $alpha ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)

@@ -4,11 +4,11 @@ cp script/MECSim_Example.txt MECSimOutput_Pot.txt
 python python/HarmonicSplitter.py
 mv Smoothed.txt ExpSmoothed.txt 
 xmin=5
-xmax=5
+xmax=15
 xdel=5
 xext=e-3
 ymin=-10
-ymax=-10
+ymax=10
 ydel=5
 yext=e-2
 x=$xmin
@@ -17,7 +17,7 @@ while [ $x -le $xmax ]
 do
   y=$ymin
   while [ $y -le $ymax ]
-   do
+  do
     cp script/Master.sk ./Master.inp
     sed -i 's/$kzero/'$x$xext'/g' ./Master.inp
     sed -i 's/$Ezero/'$y$yext'/g' ./Master.inp
