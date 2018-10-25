@@ -11,3 +11,8 @@ output/
 # ML python codes - keep off repo for now
 python_ml/
 
+<<<<<<< HEAD
+=======
+# output files
+output/
+>>>>>>> master
