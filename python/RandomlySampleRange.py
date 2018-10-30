@@ -51,7 +51,7 @@
 # 
 # 
 
-# In[113]:
+# In[1]:
 
 import numpy as np
 
@@ -71,7 +71,7 @@ import numpy as np
 # 
 # Rather than a sweep which requires a ``del_x`` the random sample requires the total number of simulations to run.
 
-# In[114]:
+# In[2]:
 
 # total number of simulations to run
 n_simulations = 10
@@ -79,7 +79,7 @@ n_simulations = 10
 store_log_files = True
 
 
-# In[115]:
+# In[3]:
 
 # setup parameters
 x_para_name = []
@@ -137,7 +137,7 @@ x_para_log.append(False)
 # The raw experimental data file must have the same format as MECSim output which is based on the output from a potentiostat (SPECS)
 # 
 
-# In[116]:
+# In[4]:
 
 Experimental_filename = 'MECSim_Example.txt'
 
@@ -169,7 +169,7 @@ Experimental_filename = 'MECSim_Example.txt'
 # Back to <a href="#top">top</a>.
 # 
 
-# In[117]:
+# In[5]:
 
 # use customer weights?
 output_single_metric = False
@@ -192,7 +192,7 @@ weights = np.array([0.5,1,1,0.5,0.3,0.1,0.05])
 # **Note: these generally don't need to be changed**
 # 
 
-# In[118]:
+# In[6]:
 
 # python dir contains all .py files
 python_dir = 'python/'
@@ -218,7 +218,7 @@ parent_dir = '../'
 # 
 # Back to <a href="#top">top</a>.
 
-# In[119]:
+# In[7]:
 
 # select whether surface plotter to be used
 plot_surfaces = False
@@ -232,7 +232,7 @@ bayesian_analysis = True
 # 
 # Can also change the default script name from 'run_mecsim_script.sh', although this is not recommended.
 
-# In[120]:
+# In[8]:
 
 # results filename and if it already exists
 results_name = 'results.txt'
@@ -245,7 +245,7 @@ script_name = 'run_mecsim_script.sh'
 # 
 # Change the default name of the simulation output file (not recommended)
 
-# In[121]:
+# In[9]:
 
 Simulation_output_filename = 'MECSimOutput_Pot.txt'
 
@@ -255,7 +255,7 @@ Simulation_output_filename = 'MECSimOutput_Pot.txt'
 # Set whether the experimental data file set above needs to have a Fast Fourier Transform (FFT) applied to it, and if so what filename to use.
 # 
 
-# In[122]:
+# In[10]:
 
 Experimental_FFT_output_filename = 'ExpSmoothed.txt'
 needs_fft_conversion = False
@@ -263,7 +263,7 @@ needs_fft_conversion = False
 
 # Check that the number of weights for the number of harmonics is correct
 
-# In[123]:
+# In[11]:
 
 if(number_harmonics+1 != len(weights)):
     print "WARNING: Found", len(weights), "weights when there are", number_harmonics+1, "harmonics (including dc)"
@@ -277,7 +277,7 @@ if(number_harmonics+1 != len(weights)):
 
 # Convert np array to csv string (in case not python reading it in!)
 
-# In[124]:
+# In[12]:
 
 txt_weights = ','.join(map(str, weights))
 print "Weights:", txt_weights
@@ -285,7 +285,7 @@ print "Weights:", txt_weights
 
 # ### Script method
 
-# In[125]:
+# In[13]:
 
 method_type = 'random'
 
@@ -297,7 +297,7 @@ method_type = 'random'
 # 
 # Back to <a href="#top">top</a>.
 
-# In[126]:
+# In[14]:
 
 f = open(parent_dir+script_dir+'Settings.inp', 'w')
 f.write(Simulation_output_filename + "\t# simulation output filename\n")
@@ -351,7 +351,7 @@ f.close()
 # 
 # Back to <a href="#top">top</a>.
 
-# In[127]:
+# In[15]:
 
 if(method_type=='random'):
     print 'Using random sampling method to write to: ' + parent_dir+script_dir+script_name
@@ -411,7 +411,7 @@ if(method_type=='random'):
             text_file.write("cp surface_plot.* {0}\n".format(output_dir))
 
 
-# In[128]:
+# In[16]:
 
 print("Total number of simulations to be run: " + str(n_simulations))
 
