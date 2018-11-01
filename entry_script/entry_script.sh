@@ -7,6 +7,8 @@ echo $PWD
 
 ls -lrt external/*
 
+echo "User prompting? Changes saved?"
+
 cp external/input/* input/
 cp external/python/* python/
 cp external/script/* script/
