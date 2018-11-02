@@ -43,4 +43,4 @@
 0		! maximum a^n term for a capacitance given by C = a_0 + a_1 V + a_2 V^2 + ... + a_n V^n, where V = Eapp - iR - E pzc. Make sure there are enough lines below to go to a^n
 0.50		! Epzc (Volts)
 5.0e-6	! a_0 term (F/cm^2)
-0, -1, 1, 0, 0, 0.0e1, 0.0e1, $Ezero, $kzero, $alpha ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)
+0, -1, 1, 0, 0, 0.0e1, 0.0e1, 0.0, 1.0, 0.5 ! type, reactions (nsp times): kf,kb, E0 (V),ksreal (cm/s), alpha for BV or lambda* for MH (1eV) (REPEAT FOR EACH REACTION)

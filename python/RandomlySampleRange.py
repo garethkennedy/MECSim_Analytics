@@ -108,6 +108,26 @@ x_para_max.append(2.0e-5)
 x_para_log.append(False)
 #### end of code chunk to copy
 
+#### copy this for as many parameters as required ####
+x_para_name.append('$R')
+x_para_min.append(0)
+x_para_max.append(100)
+x_para_log.append(False)
+#### end of code chunk to copy
+
+#### copy this for as many parameters as required ####
+x_para_name.append('$alpha')
+x_para_min.append(0.3)
+x_para_max.append(0.7)
+x_para_log.append(False)
+#### end of code chunk to copy
+
+#### copy this for as many parameters as required ####
+x_para_name.append('$cap')
+x_para_min.append(0.0)
+x_para_max.append(1.0e-5)
+x_para_log.append(False)
+#### end of code chunk to copy
 
 
 # ### Experiment parameters
@@ -155,7 +175,7 @@ Experimental_filename = 'MECSim_Example.txt'
 output_single_metric = False
 
 # number of harmonics (excluding the dc component - harmonic = 0)
-number_harmonics = 6
+number_harmonics = 0
 frequency_bandwidth = 1.    # only 1 needed for simulations
 # set to 1 if using weights (else 0)
 use_weights = 0
@@ -198,7 +218,7 @@ parent_dir = '../'
 # 
 # Back to <a href="#top">top</a>.
 
-# In[17]:
+# In[7]:
 
 # select whether surface plotter to be used
 plot_surfaces = False
@@ -331,7 +351,7 @@ f.close()
 # 
 # Back to <a href="#top">top</a>.
 
-# In[18]:
+# In[15]:
 
 if(method_type=='random'):
     print 'Using random sampling method to write to: ' + parent_dir+script_dir+script_name

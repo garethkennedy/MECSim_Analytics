@@ -73,7 +73,7 @@ iPlotInteractive = True
 # display optimal fit
 iPlotFit = True
 # display error bars
-iPlotErrBars = True
+iPlotErrBars = False
 # logscale for probabilities (coloured)
 iPlotLogscale = True
 # select which columns to plot as parameters (x,y)

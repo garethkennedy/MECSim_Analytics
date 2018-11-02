@@ -1,38 +1,28 @@
 #!/bin/bash
-cp script/Settings.inp ./
-cp script/MECSim_Example.txt MECSimOutput_Pot.txt
-python python/HarmonicSplitter.py
-mv Smoothed.txt ExpSmoothed.txt 
-xmin=5
-xmax=5
-xdel=5
-xext=e-3
-ymin=-10
-ymax=-10
-ydel=5
-yext=e-2
-x=$xmin
-echo '$kzero,$Ezero,S' > results.txt
-while [ $x -le $xmax ]
+i=0
+imax=10
+while [ $i -le $imax ]
 do
-  y=$ymin
-  while [ $y -le $ymax ]
-   do
-    cp script/Master.sk ./Master.inp
-    sed -i 's/$kzero/'$x$xext'/g' ./Master.inp
-    sed -i 's/$Ezero/'$y$yext'/g' ./Master.inp
+  i=$((i+1))
+  cp script/Master.sk ./Master.inp
+    x=$(python python/ReturnRandomExpFormat.py -0.1 0.1 False)
+    sed -i 's/$Ezero/'$x'/g' ./Master.inp
+    echo '$Ezero' $x
+    paraString=$x
+    x=$(python python/ReturnRandomExpFormat.py 0.01 10000.0 True)
+    sed -i 's/$kzero/'$x'/g' ./Master.inp
+    echo '$kzero' $x
+    paraString=$paraString,$x
+    x=$(python python/ReturnRandomExpFormat.py 0.3 0.7 False)
+    sed -i 's/$alpha/'$x'/g' ./Master.inp
+    echo '$alpha' $x
+    paraString=$paraString,$x
     ./MECSim.exe 2>errors.txt
-    mv log.txt output/log_$x$xext_$y$yext.txt
     python python/HarmonicSplitter.py
     z=$(python python/CompareSmoothed.py)
-    echo $x$xext,$y$yext,$z >> results.txt
-    y=$((y+ydel))
-  done
-  x=$((x+xdel))
+    echo $paraString,$z >> results.txt
 done
 cp results.txt output/
 python python/BayesianAnalysis.py results.txt
 cp bayesian_plot.* output/
 cp posterior.txt opt_parameters.txt output/
-python python/SurfacePlotter.py results.txt
-cp surface_plot.* output/

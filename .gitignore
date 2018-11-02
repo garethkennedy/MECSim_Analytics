@@ -5,8 +5,9 @@
 # fortran source code
 src/
 
+# output directory
+output/
+
 # ML python codes - keep off repo for now
 python_ml/
 
-# output files
-output/
