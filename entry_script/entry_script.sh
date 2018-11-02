@@ -42,6 +42,13 @@ elif [ "$1" == "--jupyter" ]; then
   dos2unix script/*.sh
   chmod +x script/*.sh
   ./script/run_jupyter_script.sh
+elif [ "$1" == "--update" ]; then
+  echo "Updating all python and jupyter notebooks in your local python directory using latest versions from the github repository ( https://github.com/garethkennedy/MECSim_Analytics/tree/master/python ). CAUTION this will overwrite any notebooks with the same names in your local python directory. As a failsafe the existing contents of python/ are copied to python/backup"
+  cd python
+  mkdir backup
+  cp * backup
+  curl -L https://codeload.github.com/garethkennedy/MECSim_Analytics/tar.gz/master | tar -xz --strip=2 MECSim_Analytics-master/python
+  cd ..
 else
   echo "Welcome to MECSim docker"
   echo ""
@@ -49,6 +56,7 @@ else
   echo " --single   : run a single experiment using MECSim on parameters given in /input/Master.inp"
   echo " --script   : run a customizable script for multiple experiments given in /script/run_mecsim_script.sh"
   echo " --jupyter  : setup a script using jupyter notebooks via browser"
+  echo " --update   : download the latest python scripts and notebooks from the github repository ( https://github.com/garethkennedy/MECSim_Analytics/tree/master/python ). CAUTION this will overwrite any notebooks with the same names in your local python directory.  As a failsafe the existing contents of python/ are copied to python/backup"
 fi
 
 #Try exposing volume with :z option in the end.
