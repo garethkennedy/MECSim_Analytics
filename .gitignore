@@ -2,6 +2,14 @@
 # Temporary files created by jupyter notebook
 *.ipynb_*
 
+# temporary files created by MECSim and analysis process
+Smoothed.txt
+Master.inp
+
+# dev temporary files in python directory
+python/*.txt
+
+
 # fortran source code
 src/
 
