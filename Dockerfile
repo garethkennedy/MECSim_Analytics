@@ -96,6 +96,7 @@ RUN mkdir python
 RUN mkdir script
 RUN mkdir input_templates
 RUN mkdir docs
+RUN mkdir output
 
 WORKDIR /usr/local/
 

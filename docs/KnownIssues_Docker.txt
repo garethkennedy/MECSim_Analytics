@@ -1,0 +1,10 @@
+C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test>docker run -v C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test/input:/usr/local/external/input -v C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test/output:/usr/local/output -v C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test/python:/usr/local/external/python -v C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test/docs:/usr/local/external/docs -v C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test/input_templates:/usr/local/external/input_templates -v C:\gfk\EChem\StatisticalAnalysis\Docker_build\MECsim_test/script:/usr/local/external/script --rm --name mecsim_container -p 8888:8888 -it mecsim --jupyter
+docker: Error response from daemon: driver failed programming external connectivity on endpoint mecsim_container (bd01ced620e3ffab261c89eca85a7ca12b727f77003a823689ab491ae3ea8d76): Error starting userland proxy: mkdir /port/tcp:0.0.0.0:8888:tcp:172.17.0.2:8888: input/output error.
+
+Likely issues:
+https://github.com/docker/for-win/issues/1967
+
+Attempted fixes:
+* updated docker for windows - 7/11/2018
+* now: Docker version 18.06.1-ce, build e68fc7a
+- ok now  but could be due to stop/start
