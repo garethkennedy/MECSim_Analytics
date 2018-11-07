@@ -10,15 +10,13 @@ ls -lrt external/*
 echo "User prompting? Changes saved?"
 
 cp external/input/* input/
+cp external/input_templates/* input_templates/
+cp external/docs/* docs/
 cp external/python/* python/
 cp external/script/* script/
 # 2: copy back to the mapped directories. Thus they will have the most up to date versions AND any gaps filled in with default files stored in the docker image
-cp input/* external/input/
-cp python/* external/python/
-cp script/* external/script/
+# only done in jupyter mode - note that this could cause unexpected behaviour if user was using incorrect dir to update and use script mode?
 
-# convert all ipynb to py
-jupyter nbconvert --to python --template=python.tpl python/*
 
 # Entry point script for MECSim docker. 
 
@@ -27,6 +25,10 @@ if [ "$1" == "--script" ]; then
   ls -lrt script/*
   dos2unix script/*.sh
   chmod +x script/*.sh
+  
+  # convert all ipynb to py
+  jupyter nbconvert --to python --template=python.tpl python/*
+
   ./script/run_mecsim_script.sh
 elif [ "$1" == "--single" ]; then
   echo "Running a single MECSim experiment:"
@@ -39,16 +41,38 @@ elif [ "$1" == "--single" ]; then
   [[ -e MECSimOutput_Pot.txt ]] && cp MECSimOutput_Pot.txt output/
 elif [ "$1" == "--jupyter" ]; then
   echo "Running a jupyter notebook env:"
+  # 2: copy back to the mapped directories (from above) 
+  cp input/* external/input/
+  cp input_templates/* external/input_templates/
+  cp docs/* external/docs/
+  cp python/* external/python/
+  cp script/* external/script/
+
+  # convert all ipynb to py
+  jupyter nbconvert --to python --template=python.tpl python/*
+  
   dos2unix script/*.sh
   chmod +x script/*.sh
   ./script/run_jupyter_script.sh
 elif [ "$1" == "--update" ]; then
   echo "Updating all python and jupyter notebooks in your local python directory using latest versions from the github repository ( https://github.com/garethkennedy/MECSim_Analytics/tree/master/python ). CAUTION this will overwrite any notebooks with the same names in your local python directory. As a failsafe the existing contents of python/ are copied to python/backup"
-  cd python
-  mkdir backup
-  cp * backup
-  curl -L https://codeload.github.com/garethkennedy/MECSim_Analytics/tar.gz/master | tar -xz --strip=2 MECSim_Analytics-master/python
-  cd ..
+  # 2: copy back to the mapped directories (from above) 
+  cp input/* external/input/
+  cp input_templates/* external/input_templates/
+  cp docs/* external/docs/
+  cp python/* external/python/
+  cp script/* external/script/
+
+  backup_dirs='python
+  input_templates'
+  for this_dir in $backup_dirs;
+  do
+    cd $this_dir
+    mkdir backup
+    cp * backup
+    curl -L https://codeload.github.com/garethkennedy/MECSim_Analytics/tar.gz/master | tar -xz --strip=2 MECSim_Analytics-master/$this_dir
+    cd ..
+  done
 else
   echo "Welcome to MECSim docker"
   echo ""

@@ -38,8 +38,8 @@ echo "c.NotebookApp.ip = '*'" >> /root/.jupyter/jupyter_notebook_config.py
 WORKDIR /usr/local/
 
 # setup scripts and python codes - these are to be automatically updated on the github
-ADD https://github.com/garethkennedy/MECSim_Analytics/archive/master.tar.gz /usr/local/git_codes.tar.gz
-RUN tar xvfz git_codes.tar.gz
+#ADD https://github.com/garethkennedy/MECSim_Analytics/archive/master.tar.gz /usr/local/git_codes.tar.gz
+#RUN tar xvfz git_codes.tar.gz
 # outputs to ~/MECSim_Analytics-master
 RUN rm -rf git_codes.tar.gz
 #RUN mv MECSim_Analytics-master/* .
@@ -54,6 +54,7 @@ WORKDIR /usr/local/MECSim_Analytics-master/
 # copy required directories
 COPY input/* /usr/local/input/
 COPY python/* /usr/local/python/
+COPY docs/* /usr/local/docs/
 COPY input_templates/* /usr/local/input_templates/
 COPY script/* /usr/local/script/
 # copy specific files
@@ -76,6 +77,9 @@ RUN ./MECSim.exe
 RUN head output/log.txt
 RUN tail output/log.txt
 
+# create py versions of default notebooks
+RUN jupyter nbconvert --to python --template=python.tpl python/*
+
 # prepare and test entry script
 #COPY MECSim_Analytics-master/entry_script/entry_script.sh .
 RUN chmod +x entry_script.sh
@@ -90,6 +94,8 @@ WORKDIR /usr/local/external/
 RUN mkdir input
 RUN mkdir python
 RUN mkdir script
+RUN mkdir input_templates
+RUN mkdir docs
 
 WORKDIR /usr/local/
 
