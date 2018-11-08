@@ -58,7 +58,6 @@ COPY docs/* /usr/local/docs/
 COPY input_templates/* /usr/local/input_templates/
 COPY script/* /usr/local/script/
 # copy specific files
-COPY entry_script/entry_script.sh /usr/local/
 
 # back to base directory
 WORKDIR /usr/local/
@@ -82,6 +81,7 @@ RUN jupyter nbconvert --to python --template=python.tpl python/*
 
 # prepare and test entry script
 #COPY MECSim_Analytics-master/entry_script/entry_script.sh .
+COPY entry_script/entry_script.sh /usr/local/
 RUN chmod +x entry_script.sh
 RUN dos2unix entry_script.sh
 #RUN ./entry_script.sh --help

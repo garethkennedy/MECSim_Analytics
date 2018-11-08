@@ -1,1 +1,1 @@
-docker run -v %cd%/input:/usr/local/input -v %cd%/output:/usr/local/output -it mecsim --single
+docker run -v %cd%/input:/usr/local/external/input -v %cd%/output:/usr/local/output -it mecsim --single
