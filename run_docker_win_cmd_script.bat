@@ -1,1 +1,1 @@
-docker run -v %cd%/input:/usr/local/external/input -v %cd%/output:/usr/local/output -v %cd%/python:/usr/local/external/python -v %cd%/script:/usr/local/external/script -it mecsim --script
+docker run -v %cd%/input:/usr/local/external/input -v %cd%/output:/usr/local/external/output -v %cd%/python:/usr/local/external/python -v %cd%/script:/usr/local/external/script -it mecsim --script

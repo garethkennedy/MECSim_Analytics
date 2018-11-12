@@ -20,4 +20,9 @@ ISSUE 2
 docker: Error response from daemon: Conflict. The container name "/mecsim_container" is already in use by container "4e0eff32c4ecbc167b190b5fec2c651d6135dd132a968f3fd53aa0df1ffae885". You have to remove (or rename) that container to be able to reuse that name.
 See 'docker run --help'.
 
+ISSUE 3:
+------
 
+docker: Error response from daemon: driver failed programming external connectivity on endpoint mecsim_container (0ea9c84a88f07810b16975a9c48b93ffbee3fe3cddac5d09d4be99b484a7f32a): Error starting userland proxy: mkdir /port/tcp:0.0.0.0:8888:tcp:172.17.0.2:8888: input/output error.
+
+reset docker for windows
