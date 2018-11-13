@@ -45,12 +45,14 @@ elif [ "$1" == "--single" ]; then
   echo "Running a single MECSim experiment:"
 
   # copy in input file
-  cp -p input/Master.inp ./
+  [[ -e input/Master.inp ]] && cp -p input/Master.inp external/input/
+  # rum single instance of mecsim
   ./MECSim.exe 2> err.txt
   # copy out result files
-  [[ -e EC_Model.* ]] && cp -p EC_Model.* external/output/
-  [[ -e log.txt ]] && cp -p log.txt external/output/
-  [[ -e MECSimOutput_Pot.txt ]] && cp -p MECSimOutput_Pot.txt external/output/
+#  [[ -e err.txt ]] && cp -p err.txt external/output/
+  dir_name="output"
+  [ -d $dir_name ] && ls -1 $dir_name | wc -l > temp.txt || echo 0 > temp.txt
+  [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p $dir_name/* external/$dir_name/
 elif [ "$1" == "--jupyter" ]; then
   echo "Running a jupyter notebook env:"
   # 2: copy back to the mapped directories (from above) 
