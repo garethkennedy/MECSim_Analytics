@@ -22,9 +22,8 @@ RUN pip install --no-cache-dir jupyter
 RUN apk add --no-cache tini
 # Tini is now available at /sbin/tini
 
-
 # Install Tini.. this is required because CMD (below) doesn't play nice with notebooks for some reason: https://github.com/ipython/ipython/issues/7062, https://github.com/jupyter/notebook/issues/334
-#RUN apk add --no-cache curl
+RUN apk add --no-cache curl binutils tar
 #RUN curl -L https://github.com/krallin/tini/releases/download/v0.10.0/tini > tini && \
 #    echo "1361527f39190a7338a0b434bd8c88ff7233ce7b9a4876f3315c22fce7eca1b0 *tini" | sha256sum -c - && \
 #    mv tini /usr/local/bin/tini

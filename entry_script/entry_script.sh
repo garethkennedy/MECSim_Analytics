@@ -19,6 +19,13 @@ do
   [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p external/$dir_name/* $dir_name/
 done
 
+# version without output
+dir_noout_list="input
+input_templates
+docs
+python
+script"
+
 # value > 0 if files exist - in which case try the copy - else ignore
 # do as part of a for loop - for all external directories
 
@@ -33,7 +40,9 @@ done
 # Entry point script for MECSim docker. 
 
 if [ "$1" == "--script" ]; then
+  echo
   echo "Running scripting mode on script/run_mecsim_script.sh:"
+  echo
   dos2unix script/*.sh
   chmod +x script/*.sh
   
@@ -42,7 +51,9 @@ if [ "$1" == "--script" ]; then
 
   ./script/run_mecsim_script.sh
 elif [ "$1" == "--single" ]; then
+  echo
   echo "Running a single MECSim experiment:"
+  echo
 
   # copy in input file
   [[ -e input/Master.inp ]] && cp -p input/Master.inp external/input/
@@ -54,7 +65,9 @@ elif [ "$1" == "--single" ]; then
   [ -d $dir_name ] && ls -1 $dir_name | wc -l > temp.txt || echo 0 > temp.txt
   [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p $dir_name/* external/$dir_name/
 elif [ "$1" == "--jupyter" ]; then
+  echo
   echo "Running a jupyter notebook env:"
+  echo
   # 2: copy back to the mapped directories (from above) 
   for dir_name in $dir_ext_list;
   do
@@ -69,22 +82,24 @@ elif [ "$1" == "--jupyter" ]; then
   chmod +x script/*.sh
   ./script/run_jupyter_script.sh
 elif [ "$1" == "--update" ]; then
-  echo "Updating all python and jupyter notebooks in your local python directory using latest versions from the github repository ( https://github.com/garethkennedy/MECSim_Analytics/tree/master/python ). CAUTION this will overwrite any notebooks with the same names in your local python directory. As a failsafe the existing contents of python/ are copied to python/backup"
+  echo
+  echo "Updating all python and jupyter notebooks in your local python directory using latest versions from the github repository ( https://github.com/garethkennedy/MECSim_Analytics/tree/master/python ). CAUTION this will overwrite any notebooks with the same names in your local python directory. As a failsafe the existing contents of blah/ are copied to blah/backup"
+  echo
   # 2: copy back to the mapped directories (from above) 
-  for dir_name in $dir_ext_list;
-  do
-    [ -d $dir_name ] && ls -1 $dir_name | wc -l > temp.txt || echo 0 > temp.txt
-    [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p $dir_name/* external/$dir_name/
-  done
+#  for dir_name in $dir_ext_list;
+#  do
+#    [ -d $dir_name ] && ls -1 $dir_name | wc -l > temp.txt || echo 0 > temp.txt
+#    [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p $dir_name/* external/$dir_name/
+#  done
   
   # backup and download update from github one directory at a time
-  for this_dir in $dir_ext_list;
+  for this_dir in $dir_noout_list;
   do
-    cd $this_dir
-    mkdir backup
-    cp -p * backup
+    cd external/$this_dir
+    [ $(ls -1 | wc -l) != "0" ] && mkdir backup
+    [ $(ls -1 | wc -l) != "0" ] && cp -p * backup
     curl -L https://codeload.github.com/garethkennedy/MECSim_Analytics/tar.gz/master | tar -xz --strip=2 MECSim_Analytics-master/$this_dir
-    cd ..
+    cd ../..
   done
 else
   echo "Welcome to MECSim docker"
