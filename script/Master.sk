@@ -1,5 +1,5 @@
 300		! Temperature (K)
-50		! uncompensated resistance (ohms)
+$R		! uncompensated resistance (ohms)
 0.500	! E_start (V)
 -0.500	! E_rev (V)
 1		! number of cycles
