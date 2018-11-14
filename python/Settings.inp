@@ -1,6 +1,0 @@
-../MECSimOutput_Pot.txt	# simulation output filename
-5	# number of harmonics
-1.0	# bandwidth frequency (Hz)
-1	# 1=use single output metric value (else=0 and each harmonic treated separately
-0	# apply different weights to each harmonic (0 to n_harm) - if =1 then weights set below
-0.5,1.0,1.0,0.5,0.3,0.1,0.05
