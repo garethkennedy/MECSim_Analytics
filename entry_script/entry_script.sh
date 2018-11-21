@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo ""
+echo "MECSim Docker build date: 22/11/2018 09:50"
+echo ""
+
 # synchronize volumes between local directory and "external" part of the docker image
 # 1: copy externally mapped directory contents over local directories
 #    note that these changes are ephemeral and will only last while the docker container is being run
@@ -103,8 +107,6 @@ elif [ "$1" == "--update" ]; then
   done
 else
   echo "Welcome to MECSim docker"
-  echo ""
-  echo "Docker build date: 22/11/2018 09:50"
   echo ""
   echo "The following options are available:"
   echo " --single   : run a single experiment using MECSim on parameters given in /input/Master.inp"
