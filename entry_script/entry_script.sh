@@ -104,6 +104,8 @@ elif [ "$1" == "--update" ]; then
 else
   echo "Welcome to MECSim docker"
   echo ""
+  echo "Docker build date: 22/11/2018 09:50"
+  echo ""
   echo "The following options are available:"
   echo " --single   : run a single experiment using MECSim on parameters given in /input/Master.inp"
   echo " --script   : run a customizable script for multiple experiments given in /script/run_mecsim_script.sh"
