@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo ""
-echo "MECSim Docker build date: 22/11/2018 09:50"
+echo "MECSim Docker build date: 30/11/2018 16:00"
 echo ""
 
 # synchronize volumes between local directory and "external" part of the docker image
@@ -30,20 +30,18 @@ docs
 python
 script"
 
-# value > 0 if files exist - in which case try the copy - else ignore
-# do as part of a for loop - for all external directories
-
-
-# 2: copy back to the mapped directories. Thus they will have the most up to date versions AND any gaps filled in with default files stored in the docker image
-# only done in jupyter mode - note that this could cause unexpected behaviour if user was using incorrect dir to update and use script mode?
-#echo "Status after copy"
-#ls -lrt *
-#echo "Copy status above"
-#date
+# common notes/warnings to users
+echo
+echo "Common usage notes"
+echo "  * if script fails ensure docker is running, restart if needed"
+echo "    Example of an error message from a fail is:"
+echo "      docker: Error response from daemon ... input/output error"
+echo "  * for aborting any run press ctrl+c"
 
 # Entry point script for MECSim docker. 
 
 if [ "$1" == "--script" ]; then
+  echo
   echo
   echo "Running scripting mode on script/run_mecsim_script.sh:"
   echo
@@ -55,6 +53,7 @@ if [ "$1" == "--script" ]; then
 
   ./script/run_mecsim_script.sh
 elif [ "$1" == "--single" ]; then
+  echo
   echo
   echo "Running a single MECSim experiment:"
   echo
@@ -69,6 +68,11 @@ elif [ "$1" == "--single" ]; then
   [ -d $dir_name ] && ls -1 $dir_name | wc -l > temp.txt || echo 0 > temp.txt
   [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p $dir_name/* external/$dir_name/
 elif [ "$1" == "--jupyter" ]; then
+  echo "  * copy/paste the URL at the end into your browser"
+  echo "      http://localhost:8888/?token=901..."
+  echo "  * for docker toolkit for older windows versions you may need to replace localhost "
+  echo "      with the docker ip (top of docker quickstart terminal)"
+  echo
   echo
   echo "Running a jupyter notebook env:"
   echo

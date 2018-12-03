@@ -1,5 +1,5 @@
 #!/bin/bash
-docker='/c/gfk/EChem/StatisticalAnalysis/Docker_build/MECSim'
+docker='/c/gfk/EChem/Docker/Docker_build/MECSim'
 
 # copy docker build instructions file
 cp -p Dockerfile $docker
