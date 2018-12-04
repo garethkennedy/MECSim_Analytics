@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo ""
-echo "MECSim Docker build date: 30/11/2018 16:00"
+echo "MECSim Docker build date: 4/12/2018 16:00"
 echo ""
 
 # synchronize volumes between local directory and "external" part of the docker image
@@ -67,6 +67,12 @@ elif [ "$1" == "--single" ]; then
   dir_name="output"
   [ -d $dir_name ] && ls -1 $dir_name | wc -l > temp.txt || echo 0 > temp.txt
   [ $(awk '{print $1}' temp.txt) != "0" ] && cp -p $dir_name/* external/$dir_name/
+  
+  echo
+  echo "Run successful:"
+  echo
+  echo "  Results saved to: output/MECSimOutput_Pot.txt"
+  echo
 elif [ "$1" == "--jupyter" ]; then
   echo "  * copy/paste the URL at the end into your browser"
   echo "      http://localhost:8888/?token=901..."
@@ -109,6 +115,9 @@ elif [ "$1" == "--update" ]; then
     curl -L https://codeload.github.com/garethkennedy/MECSim_Analytics/tar.gz/master | tar -xz --strip=2 MECSim_Analytics-master/$this_dir
     cd ../..
   done
+  echo
+  echo "Update completed"
+  echo
 else
   echo "Welcome to MECSim docker"
   echo ""
