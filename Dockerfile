@@ -76,7 +76,7 @@ RUN head output/log.txt
 RUN tail output/log.txt
 
 # create py versions of default notebooks
-RUN jupyter nbconvert --to python --template=python.tpl python/*
+RUN jupyter nbconvert --to python --template=python.tpl python/*.ipynb
 
 # prepare and test entry script
 #COPY MECSim_Analytics-master/entry_script/entry_script.sh .

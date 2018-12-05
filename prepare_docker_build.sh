@@ -25,5 +25,6 @@ cp -p entry_script/* $docker/entry_script
 # python scripts that can be editted by user or updated from git
 mkdir $docker/python
 cp -p python/*.ipynb $docker/python
+cp -p python/*.png $docker/python
 
 # what about the scripts to run the docker container correctly?
