@@ -14,8 +14,10 @@ python/*.txt
 src/
 
 # output directory
-output/
+output*/
 
 # ML python codes - keep off repo for now
 python_ml/
 
+# MECSim running directories
+mecsim_*/
