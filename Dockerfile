@@ -15,6 +15,7 @@ RUN pip install --no-cache-dir scipy
 RUN pip install --no-cache-dir matplotlib
 RUN pip install --no-cache-dir pandas 
 RUN pip install --no-cache-dir jupyter
+RUN pip install --no-cache-dir sklearn
 # Add Tini. Tini operates as a process subreaper for jupyter. This prevents
 # kernel crashes.
 # install tini for alpine linux
